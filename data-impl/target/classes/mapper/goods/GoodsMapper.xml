@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.quxin.freshfun.dao.GoodsMapper">
+
+    <!-- 根据商品编号查询商品基本信息 -->
+    <select id="selectGoodsByGoodsId" parameterType="java.lang.Long" resultType="com.quxin.freshfun.api.bean.GoodsPOJO">
+		select id as goodsId ,title as title , sub_title as subtitle , des as goodsDes , shop_price as shopPrice ,
+		origin_price as originPrice , cost as goodsCost , img as goodsImg ,	sale_num as saleNum , stock_num as stockNum ,
+		is_on_sale as isOnSale , category1 as category1 , category2 as category2  , category3 as category3 ,category4 as category4 ,
+		app_id as appId , shop_id as shopId , created as created , updated as updated
+		from goods_base where id = #{goodsId} and is_deleted = 0
+	</select>
+
+
+</mapper>
