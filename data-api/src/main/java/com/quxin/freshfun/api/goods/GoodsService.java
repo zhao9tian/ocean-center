@@ -1,4 +1,4 @@
-package com.quxin.freshfun.api;
+package com.quxin.freshfun.api.goods;
 
 import com.quxin.freshfun.api.bean.GoodsPOJO;
 

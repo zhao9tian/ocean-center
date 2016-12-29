@@ -1,7 +1,7 @@
-package com.quxin.freshfun.impl;
+package com.quxin.freshfun.impl.goods;
 
 import com.alibaba.fastjson.JSON;
-import com.quxin.freshfun.api.GoodsService;
+import com.quxin.freshfun.api.goods.GoodsService;
 import com.quxin.freshfun.api.bean.GoodsPOJO;
 import com.quxin.freshfun.dao.GoodsMapper;
 import org.slf4j.Logger;
