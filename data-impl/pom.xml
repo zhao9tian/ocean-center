@@ -11,7 +11,7 @@
 
     <artifactId>data-impl</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>goods-impl</name>
+    <name>data-impl</name>
     <packaging>war</packaging>
 
     <properties>
