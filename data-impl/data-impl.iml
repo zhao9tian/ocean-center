@@ -16,6 +16,9 @@
         </sourceRoots>
       </configuration>
     </facet>
+    <facet type="Spring" name="Spring">
+      <configuration />
+    </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/classes" />
@@ -74,5 +77,6 @@
     <orderEntry type="library" name="Maven: org.apache.curator:curator-framework:2.5.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.curator:curator-client:2.5.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:16.0.1" level="project" />
+    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.26" level="project" />
   </component>
 </module>
