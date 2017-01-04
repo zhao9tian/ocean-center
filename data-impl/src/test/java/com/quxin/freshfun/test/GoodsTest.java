@@ -26,11 +26,13 @@ public class GoodsTest extends TestBase {
     }
 
 
-
     @org.junit.Test
-    public void queryGoodsById(){
+    public void queryGoodsById() {
 
-        System.out.println(goodsService.queryGoodsByGoodsId(55L));
+//        System.out.println(goodsService.queryGoodsPVGoodsId(55L, 0L, 111111111110L));
+//        System.out.println(goodsService.queryGoodsUVByGoodsId(55L, 0L, 111111111110L));
+//        System.out.println(goodsService.queryGoodsCVRByGoodsId(2071531L, 0L, 111111111110L));
+        System.out.println(goodsService.querySevenRPRByGoodsId(2071531L, 0L, 111111111110L));
     }
 
 

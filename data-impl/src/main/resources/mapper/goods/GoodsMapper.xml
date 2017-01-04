@@ -2,13 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.quxin.freshfun.dao.GoodsMapper">
 
-    <!-- 根据商品编号查询商品基本信息 -->
-    <select id="selectGoodsByGoodsId" parameterType="java.lang.Long" resultType="com.quxin.freshfun.api.bean.GoodsPOJO">
-		select id as goodsId ,title as title , sub_title as subtitle , des as goodsDes , shop_price as shopPrice ,
-		origin_price as originPrice , cost as goodsCost , img as goodsImg ,	sale_num as saleNum , stock_num as stockNum ,
-		is_on_sale as isOnSale , category1 as category1 , category2 as category2  , category3 as category3 ,category4 as category4 ,
-		app_id as appId , shop_id as shopId , created as created , updated as updated
-		from goods_base where id = #{goodsId} and is_deleted = 0
+    <!-- 根据商品id查询pv -->
+    <select id="selectGoodsPVByGoodsId" resultType="java.lang.Integer">
+		select count(id) from ptp where  goods_id = #{goodsId}  and key_event = 'e101900'
+			and	created <![CDATA[>]]> #{startTime} and created <![CDATA[<]]> #{endTime}
 	</select>
 
 	<select id="selectGoodsNameById" parameterType="java.util.Arrays" resultType="com.quxin.freshfun.api.bean.GoodsPOJO">
@@ -18,5 +15,20 @@
 		</foreach>
 	</select>
 
+
+	<!-- 根据商品id查询下单用户数-->
+	<select id="selectOrderedUsersByGoodsId" resultType="java.lang.Integer">
+		select count(distinct id) from order_details where is_deleted = 0 and
+			goods_id = #{goodsId} and create_date <![CDATA[>]]> #{startTime} and create_date <![CDATA[<]]> #{endTime}
+			and order_status <![CDATA[>=]]> 30
+	</select>
+
+
+	<!-- 根据商品id查询重复下单用户数-->
+	<select id="selectRepeatedUsersByGoodsId" resultType="java.lang.Integer">
+		select count(*) from (select count(user_id) from order_details where is_deleted = 0 and
+		goods_id = #{goodsId} and create_date <![CDATA[>]]> #{startTime} and create_date <![CDATA[<]]> #{endTime}
+		and order_status <![CDATA[>=]]> 30 group by user_id having count(user_id) > 1) as users
+	</select>
 
 </mapper>
