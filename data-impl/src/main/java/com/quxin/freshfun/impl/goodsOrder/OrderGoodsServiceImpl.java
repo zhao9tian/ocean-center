@@ -19,24 +19,25 @@ public class OrderGoodsServiceImpl implements OrderGoodsService {
     /**
      * 根据商品查询成交额
      * 注解Vot：volume of transaction（成交额）
-     * @param startTime 开始时间
-     * @param endTime   截止时间
+     * @param startDate 开始时间
+     * @param endDate 截止时间
      * @return 商品数据的输出参数列表
      */
     @Override
-    public List<GoodsOrderOutParam> findGoodsOrderVot(Long startTime, Long endTime) {
-        return goodsOrderMapper.queryGoodsVot();
+    public List<GoodsOrderOutParam> findGoodsOrderVot(Long startDate, Long endDate) {
+        return goodsOrderMapper.selectGoodsVot(startDate,endDate);
     }
 
     /**
      * 根据商品查询成交量
      * 注解Tv：trading volume （成交量）
-     * @param startTime 开始时间
-     * @param endTime   截止时间
+     * @param startDate 开始时间
+     * @param endDate 截止时间
      * @return 商品数据的输出参数列表
      */
     @Override
-    public List<GoodsOrderOutParam> findGoodsOrderTv(Long startTime, Long endTime) {
-        return goodsOrderMapper.queryGoodsTv();
+    public List<GoodsOrderOutParam> findGoodsOrderTv(Long startDate, Long endDate) {
+        List<GoodsOrderOutParam> list = goodsOrderMapper.selectGoodsTv(startDate,endDate);
+        return list;
     }
 }

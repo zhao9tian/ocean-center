@@ -21,7 +21,7 @@ public interface OrderGoodsService {
 
     /**
      * 根据商品查询成交量
-     * 注解Vot：trading volume （成交量）
+     * 注解Tv：trading volume （成交量）
      * @param startTime 开始时间
      * @param endTime 截止时间
      * @return 商品数据的输出参数列表

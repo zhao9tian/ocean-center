@@ -5,6 +5,8 @@ import org.junit.BeforeClass;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.text.ParseException;
+
 public class TestBase {
     @SuppressWarnings("resource")
     private static AbstractApplicationContext CONTEXT;

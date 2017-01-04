@@ -11,5 +11,12 @@
 		from goods_base where id = #{goodsId} and is_deleted = 0
 	</select>
 
+	<select id="selectGoodsNameById" parameterType="java.util.Arrays" resultType="com.quxin.freshfun.api.bean.GoodsPOJO">
+		select id as goodsId,title as title from goods_base where id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
 
 </mapper>
