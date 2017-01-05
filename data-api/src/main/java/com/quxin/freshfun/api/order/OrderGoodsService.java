@@ -3,6 +3,7 @@ package com.quxin.freshfun.api.order;
 import com.quxin.freshfun.api.bean.goodsOrder.GoodsOrderOutParam;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ziming on 2016/12/29.
@@ -17,7 +18,7 @@ public interface OrderGoodsService {
      * @param endTime 截止时间
      * @return 商品数据的输出参数列表
      */
-    List<GoodsOrderOutParam> findGoodsOrderVot(Long startTime,Long endTime);
+    List<Map<String,Object>> findGoodsOrderVot(Long startTime,Long endTime);
 
     /**
      * 根据商品查询成交量
@@ -26,5 +27,23 @@ public interface OrderGoodsService {
      * @param endTime 截止时间
      * @return 商品数据的输出参数列表
      */
-    List<GoodsOrderOutParam> findGoodsOrderTv(Long startTime,Long endTime);
+    List<Map<String,Object>> findGoodsOrderTv(Long startTime, Long endTime);
+
+    /**
+     * 根据订单创建时间查询总成交量
+     * @param startDate 开始时间
+     * @param endDate 截止时间
+     * @return 总成交量
+     */
+    Integer findAllGoodsTv(Long startDate,Long endDate);
+
+    /**
+     * 根据订单创建时间查询总成交额
+     * @param startDate 开始时间
+     * @param endDate 截止时间
+     * @return 总成交额
+     */
+    Long findAllGoodsVot(Long startDate,Long endDate);
+
+    List<Map<String,Object>> selectErpAppInfo();
 }

@@ -1,5 +1,10 @@
 package com.quxin.freshfun.api.goods;
 
+import com.quxin.freshfun.api.bean.GoodsPOJO;
+
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 商品service
  * Created by qucheng on 2016/10/18.
@@ -43,4 +48,10 @@ public interface GoodsService {
      */
     Double querySevenRPRByGoodsId(Long goodsId , Long startTime , Long endTime);
 
+    /**
+     * 根据商品Id查询商品详情
+     * @param ids 商品Id
+     * @return 返回商品信息
+     */
+    List<GoodsPOJO> selectGoodsNameById(Long[] ids);
 }
