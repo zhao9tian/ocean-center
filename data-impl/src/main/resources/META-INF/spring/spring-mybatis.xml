@@ -3,12 +3,12 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
-    <!-- 数据源 -->
-    <bean id="parentDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+    <!-- 线上数据源 -->
+    <bean id="online" class="org.apache.commons.dbcp.BasicDataSource">
         <property name="driverClassName" value="${jdbc.driver}"></property>
-        <property name="url" value="${jdbc.url}"></property>
-        <property name="username" value="${jdbc.username}"></property>
-        <property name="password" value="${jdbc.password}"></property>
+        <property name="url" value="${jdbc.url1}"></property>
+        <property name="username" value="${jdbc.username1}"></property>
+        <property name="password" value="${jdbc.password1}"></property>
         <property name="maxActive" value="2"/>
         <property name="initialSize" value="1"/>
         <property name="maxIdle" value="2"/>
@@ -16,17 +16,9 @@
         <!-- 等待连接超时时间，30秒 -->
         <property name="maxWait" value="30000"/>
     </bean>
-    <!-- 数据库 -->
-    <bean id="readDataSource" parent="parentDataSource">
-        <property name="username" value="${jdbc.username}"></property>
-        <property name="password" value="${jdbc.password}"></property>
-    </bean>
-    <bean id="writeDataSource" parent="parentDataSource">
-        <property name="username" value="${jdbc.username}"></property>
-        <property name="password" value="${jdbc.password}"></property>
-    </bean>
 
-    <bean id="ptpDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+    <!--打点数据库-->
+    <bean id="ptp" class="org.apache.commons.dbcp.BasicDataSource">
         <property name="driverClassName" value="${jdbc.driver}"></property>
         <property name="url" value="${jdbc.url2}"></property>
         <property name="username" value="${jdbc.username2}"></property>
@@ -38,16 +30,30 @@
         <!-- 等待连接超时时间，30秒 -->
         <property name="maxWait" value="30000"/>
     </bean>
+
+    <!--ocean数据库-->
+    <bean id="ocean" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"></property>
+        <property name="url" value="${jdbc.url3}"></property>
+        <property name="username" value="${jdbc.username3}"></property>
+        <property name="password" value="${jdbc.password3}"></property>
+        <property name="maxActive" value="2"/>
+        <property name="initialSize" value="1"/>
+        <property name="maxIdle" value="2"/>
+        <property name="minIdle" value="1"/>
+        <!-- 等待连接超时时间，30秒 -->
+        <property name="maxWait" value="30000"/>
+    </bean>
     <!-- spring配置文件配置多数据源关系 -->
     <bean id="dataSource" class="com.quxin.freshfun.db.DynamicDataSource">
         <property name="targetDataSources">
             <map key-type="java.lang.String">
-                <entry key="readDataSource" value-ref="readDataSource"></entry>
-                <entry key="writeDataSource" value-ref="writeDataSource"></entry>
-                <entry key="ptpDataSource" value-ref="ptpDataSource"></entry>
+                <entry key="ocean" value-ref="ocean"></entry>
+                <entry key="online" value-ref="online"></entry>
+                <entry key="ptp" value-ref="ptp"></entry>
             </map>
         </property>
-        <property name="defaultTargetDataSource" ref="readDataSource"></property>
+        <property name="defaultTargetDataSource" ref="ocean"></property>
     </bean>
     <!-- myBatis文件 -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">

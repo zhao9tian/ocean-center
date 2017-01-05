@@ -5,7 +5,7 @@
     <!-- 根据商品id查询pv -->
     <select id="selectGoodsPVByGoodsId" resultType="java.lang.Integer">
 		select count(id) from ptp where  goods_id = #{goodsId}  and key_event = 'e101900'
-			and	created <![CDATA[>]]> #{startTime} and created <![CDATA[<]]> #{endTime}
+			and	created <![CDATA[>=]]> #{startTime} and created <![CDATA[<]]> #{endTime}
 	</select>
 
 	<select id="selectGoodsNameById" parameterType="java.util.Arrays" resultType="com.quxin.freshfun.api.bean.GoodsPOJO">

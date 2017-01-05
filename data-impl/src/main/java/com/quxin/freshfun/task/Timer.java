@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 public class Timer {
 
 
+
 //    @Scheduled(cron="0/10 * * * * ? ")   //ss : mm : HH
     @Scheduled(cron="0/10 * * * * ? ")   //ss : mm : HH
     public void autoImportGoodsData() {
