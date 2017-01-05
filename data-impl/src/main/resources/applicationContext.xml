@@ -21,6 +21,7 @@
 	</bean>
 
 	<import resource="classpath*:META-INF/spring/goods-provider.xml" />
+	<import resource="classpath*:META-INF/spring/data-provider.xml" />
 	<import resource="classpath*:META-INF/spring/spring.xml" />
 	<import resource="classpath*:META-INF/spring/spring-mybatis.xml" />
 	<import resource="classpath*:META-INF/spring/dubbo-config.xml" />

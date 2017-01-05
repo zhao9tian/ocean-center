@@ -1,10 +1,14 @@
 package com.quxin.freshfun.impl.goods;
 
+import com.quxin.freshfun.api.bean.GoodsPOJO;
 import com.quxin.freshfun.api.goods.GoodsService;
 import com.quxin.freshfun.dao.GoodsMapper;
 import com.quxin.freshfun.db.DynamicDataSourceHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -54,5 +58,16 @@ public class GoodsServiceImpl implements GoodsService {
 
 
 
+
+    /**
+     * 根据商品Id查询商品详情
+     *
+     * @param ids 商品Id
+     * @return 返回商品信息
+     */
+    @Override
+    public List<GoodsPOJO> selectGoodsNameById(Long[] ids) {
+        return goodsMapper.selectGoodsNameById(ids);
+    }
 
 }

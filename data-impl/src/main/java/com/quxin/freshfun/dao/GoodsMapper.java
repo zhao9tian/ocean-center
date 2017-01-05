@@ -1,6 +1,10 @@
 package com.quxin.freshfun.dao;
 
+import com.quxin.freshfun.api.bean.GoodsPOJO;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 商品dao层
@@ -36,5 +40,12 @@ public interface GoodsMapper {
     Integer selectRepeatedUsersByGoodsId(@Param("goodsId") Long goodsId,@Param("startTime") Long startTime, @Param("endTime") Long endTime);
 
 //    Integer
+
+    /**
+     * 根据商品Id查询商品详情
+     * @param ids 商品Id
+     * @return 返回商品信息
+     */
+    List<GoodsPOJO> selectGoodsNameById(Long[] ids);
 
 }

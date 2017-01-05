@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Ziming on 2017/1/3.
@@ -30,8 +31,13 @@ public class GoodsOrderTest extends TestBase {
 
     @Test
     public void test(){
-        System.out.print("test"+orderGoodsService.getClass());
-        List<GoodsOrderOutParam> goList = orderGoodsService.findGoodsOrderTv(1475340896l,1481159084l);
+        List<Map<String,Object>> goList = orderGoodsService.findGoodsOrderTv(1475340896l,1481159084l);
+        System.out.print(JSON.toJSONString(goList));
+    }
+
+    @Test
+    public void test1(){
+        List<Map<String,Object>> goList = orderGoodsService.selectErpAppInfo();
         System.out.print(JSON.toJSONString(goList));
     }
 }
