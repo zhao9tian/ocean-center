@@ -1,8 +1,6 @@
 package com.quxin.freshfun.test;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.quxin.freshfun.api.bean.goodsOrder.GoodsOrderOutParam;
 import com.quxin.freshfun.api.order.OrderGoodsService;
 import org.junit.After;
 import org.junit.Before;

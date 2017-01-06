@@ -7,6 +7,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 
 	public  static  final String PTP_DATA = "ptp";
 	public  static  final String ONLINE_DATA = "online";
+	public  static  final String OCEAN_DATA = "ocean";
 
 	@Override
 	protected Object determineCurrentLookupKey() {

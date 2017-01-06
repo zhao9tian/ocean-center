@@ -1,7 +1,5 @@
 package com.quxin.freshfun.api.order;
 
-import com.quxin.freshfun.api.bean.goodsOrder.GoodsOrderOutParam;
-
 import java.util.List;
 import java.util.Map;
 
