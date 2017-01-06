@@ -83,4 +83,11 @@ public interface GoodsMapper {
      * @return 列表结果
      */
     List<Map<String,Object>> selectGoodsNamesByGoodsIds(@Param("goodsIds") Long[] goodsIds);
+
+    /**
+     * 插入商品数据指标
+     * @param goodsData 商品指标
+     * @return 插入记录数
+     */
+    Integer insertGoodsData(Map<String, Object> goodsData);
 }

@@ -61,4 +61,9 @@
 		</foreach>
 	</select>
 
+	<!--插入商品指标-->
+	<insert id="insertGoodsData" parameterType="java.util.HashMap" >
+		insert into
+	</insert>
+
 </mapper>

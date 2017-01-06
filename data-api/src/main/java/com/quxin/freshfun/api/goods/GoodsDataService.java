@@ -1,6 +1,5 @@
 package com.quxin.freshfun.api.goods;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,11 +10,11 @@ public interface GoodsDataService {
 
 
     /**
-     * 根据商品Id查询商品指标
+     * 录入商品指标
      * @param goodsId 商品id
      * @return 商品指标
      */
-    Map<String , Object> getGoodsIndicator(Long goodsId);
+    Boolean saveGoodsIndicator(Long goodsId);
 
 
     /**
@@ -38,5 +37,5 @@ public interface GoodsDataService {
      * @param goodsIds 商品id
      * @return 列表 map的key为商品id , value为 商品name
      */
-    List<Map<String , Object>> getGoodsNamesByGoodsIds(Long[] goodsIds);
+    Map<Long, Object> getGoodsNamesByGoodsIds(Long[] goodsIds);
 }
