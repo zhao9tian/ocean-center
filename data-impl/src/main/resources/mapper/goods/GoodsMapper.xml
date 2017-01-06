@@ -8,62 +8,132 @@
 			and	created <![CDATA[>=]]> #{startTime} and created <![CDATA[<]]> #{endTime}
 	</select>
 
-	<select id="selectGoodsNameById" parameterType="java.util.Arrays" resultType="com.quxin.freshfun.api.bean.GoodsPOJO">
-		select id as goodsId,title as title from goods_base where id in
-		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
-			#{item}
-		</foreach>
-	</select>
+    <select id="selectGoodsNameById" parameterType="java.util.Arrays"
+            resultType="com.quxin.freshfun.api.bean.GoodsPOJO">
+        select id as goodsId,title as title from goods_base where id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 
 
-	<!-- 根据商品id查询7天下单用户-->
-	<select id="selectOrderedUsersByGoodsId" resultType="long">
+    <!-- 根据商品id查询7天下单用户-->
+    <select id="selectOrderedUsersByGoodsId" resultType="long">
 		select distinct user_id from order_details where is_deleted = 0 and
 			goods_id = #{goodsId} and create_date <![CDATA[>=]]> #{startTime} and create_date <![CDATA[<]]> #{endTime}
 			and order_status <![CDATA[>=]]> 20
 	</select>
 
 
-	<!-- 根据商品id查询重复下单用户-->
-	<select id="selectRepeatedUsersByGoodsId" resultType="long">
-		select user_id from order_details where is_deleted = 0 and goods_id = #{goodsId} and order_status <![CDATA[>=]]> 20
-		and user_id in
-			<foreach collection="users" index="index" open="(" separator="," close=")" item="item">
-				#{item}
-			</foreach>
-		 group by user_id having count(*) > 1
-	</select>
+    <!-- 根据商品id查询重复下单用户-->
+    <select id="selectRepeatedUsersByGoodsId" resultType="long">
+        select user_id from order_details where is_deleted = 0 and goods_id = #{goodsId} and order_status <![CDATA[>=]]>
+        20
+        and user_id in
+        <foreach collection="users" index="index" open="(" separator="," close=")" item="item">
+            #{item}
+        </foreach>
+        group by user_id having count(*) > 1
+    </select>
 
-	<!-- 根据商品id查询成交额和商品成交量 -->
-	<select id="selectGMVAndVolumeByGoodsId" resultType="java.util.HashMap">
+    <!-- 根据商品id查询成交额和商品成交量 -->
+    <select id="selectGMVAndVolumeByGoodsId" resultType="java.util.HashMap">
 		select sum(`actual_price`) as gmv , sum(`count`) as volume from order_details where is_deleted = 0 and
 		 goods_id = #{goodsId} and order_status <![CDATA[>=]]> 20 and create_date <![CDATA[>=]]> #{startTime} and create_date <![CDATA[<]]> #{endTime}
 	</select>
 
-	<!--查询商品类目和成交价-->
-	<select id="selectCategoryAndCostByGoodsId" resultType="java.util.HashMap">
+    <!--查询商品类目和成交价-->
+    <select id="selectCategoryAndCostByGoodsId" resultType="java.util.HashMap">
 		select category2 as category, cost as goodsCost from goods_base where id = #{goodsId} and is_deleted = 0
 	</select>
 
 
-	<!--查询商品类目和成交价-->
-	<select id="selectGoodsPVByGoodsIdAndAppId" resultType="int">
+    <!--查询商品类目和成交价-->
+    <select id="selectGoodsPVByGoodsIdAndAppId" resultType="int">
 		select count(*) from ptp where  goods_id = #{goodsId} and app_id = #{appId}  and key_event = 'e101900'
 			and	created <![CDATA[>=]]> #{startTime} and created <![CDATA[<]]> #{endTime}
 	</select>
 
 
-	<!--查询商品名称-->
-	<select id="selectGoodsNamesByGoodsIds" resultType="java.util.HashMap">
-		select id as goodsId, title as `name` from goods_base where is_deleted = 0 and id in
-		<foreach collection="goodsIds" item="item" index="index" open="(" separator="," close=")">
-			#{item}
-		</foreach>
+    <!--查询商品名称-->
+    <select id="selectGoodsNamesByGoodsIds" resultType="java.util.HashMap">
+        select id as goodsId, title as `name` from goods_base where is_deleted = 0 and id in
+        <foreach collection="goodsIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <!--插入商品指标-->
+    <insert id="insertGoodsData" parameterType="java.util.HashMap">
+		insert into goods_data(	goods_id , `date` , pv , uv ,category , gmv_uv , gmv ,
+		 						volume , seven_rpr , month_rpr , gross_margin , convert_rate , avg_price)
+		 		values (#{goodsId} , #{date} , #{pv} ,#{uv} , #{category} , #{gmvUv} ,#{gmv} ,#{volume} ,#{sevenRpr},
+		 				#{monthRpr} , #{grossMargin} ,#{convertRate} ,#{avgPrice} )
+	</insert>
+
+    <!--查询商品id -->
+    <select id="selectAllGoodsIds" resultType="java.lang.Long">
+		select id from goods_base where is_deleted = 0
 	</select>
 
-	<!--插入商品指标-->
-	<insert id="insertGoodsData" parameterType="java.util.HashMap" >
-		insert into
-	</insert>
+    <!--查询指定时间段内的商品gmv总和-->
+    <select id="selectSumGmv" resultType="java.lang.Long">
+		select sum(gmv) from goods_data where `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
+	</select>
+
+    <!--查询指定时间段内商品gmv前十的信息-->
+    <select id="selectGmvTopTenGoods" resultType="java.util.HashMap">
+		select goods_id as goodsId , gmv from goods_data where `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
+				and gmv > 0 order by gmv desc limit 10
+	</select>
+
+    <!--查询指定时间段内的商品volume总和-->
+    <select id="selectSumVolume" resultType="java.lang.Long">
+		select sum(volume) from goods_data where `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
+	</select>
+
+    <!--查询指定时间段内商品volume前十的信息-->
+    <select id="selectVolumeTopTenGoods" resultType="java.util.HashMap">
+		select goods_id as goodsId , volume from goods_data where `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
+		and volume > 0 order by volume desc limit 10
+	</select>
+
+    <!--查询品类的gmv占比和排名-->
+    <select id="selectGmvTopTenCategory" resultType="java.util.HashMap">
+        select sum(gmv) as gmv, category as categoryId from goods_data where `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
+          group by category having sum(gmv) > 0 order by sum(gmv) desc
+	</select>
+
+
+    <!--查询指定时间段内某个品类下的商品gmv总和-->
+    <select id="selectSumGmvByCategory" resultType="java.lang.Long">
+        select sum(gmv) from goods_data where category = #{categoryId} and `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
+    </select>
+
+    <!--查询指定时间段内某个类目下商品gmv前十的信息-->
+    <select id="selectGmvTopTenGoodsByCategory" resultType="java.util.HashMap">
+        select goods_id as goodsId , gmv from goods_data where category = #{categoryId} and `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
+        and gmv > 0  order by gmv desc limit 10
+    </select>
+
+
+    <!--查询品类的volume占比和排名-->
+    <select id="selectVolumeTopTenCategory" resultType="java.util.HashMap">
+        select sum(volume) as volume, category as categoryId from goods_data where `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
+          group by category having sum(volume) > 0 order by sum(volume) desc
+    </select>
+
+
+    <!--查询指定时间段内某个类目下商品前十的信息-->
+    <select id="selectVolumeTopTenGoodsByCategory" resultType="java.util.HashMap">
+        select goods_id as goodsId , volume from goods_data where category = #{categoryId} and `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
+        and volume > 0  order by volume desc limit 10
+    </select>
+
+
+    <!--查询指定时间段内某个品类的商品volume总和-->
+    <select id="selectSumVolumeByCategory" resultType="java.lang.Long">
+        select sum(volume) from goods_data where category = #{categoryId} and `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
+    </select>
 
 </mapper>
