@@ -76,4 +76,11 @@ public interface GoodsMapper {
      */
     Integer selectGoodsPVByGoodsIdAndAppId(@Param("goodsId") Long goodsId, @Param("appId") Long appId ,
                                            @Param("startTime") Long startTime, @Param("endTime") Long endTime);
+
+    /**
+     * 根据商品Ids批量查询商品名称
+     * @param goodsIds 商品id
+     * @return 列表结果
+     */
+    List<Map<String,Object>> selectGoodsNamesByGoodsIds(@Param("goodsIds") Long[] goodsIds);
 }

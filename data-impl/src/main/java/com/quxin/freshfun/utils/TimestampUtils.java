@@ -2,6 +2,7 @@ package com.quxin.freshfun.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * 时间戳工具类
@@ -36,6 +37,15 @@ public class TimestampUtils {
             dateString = format.format(date*1000);
         }
         return dateString;
+    }
+
+    /**
+     * 获取前一天的date yyyy-MM-dd
+     * @return 字符串型的日期
+     */
+    public static String getDateFromTimestamp(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(new Date(System.currentTimeMillis()-86400000));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.quxin.freshfun.api.goods;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,4 +32,11 @@ public interface GoodsDataService {
      * @return pv uv   key :  pv  uv
      */
     Map<String , Object> getPVAndUVByGoodsIdAndAppId(Long goodsId , Long appId);
+
+    /**
+     * 根据商品Id查询商品名称
+     * @param goodsIds 商品id
+     * @return 列表 map的key为商品id , value为 商品name
+     */
+    List<Map<String , Object>> getGoodsNamesByGoodsIds(Long[] goodsIds);
 }

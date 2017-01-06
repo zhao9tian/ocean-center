@@ -4,7 +4,7 @@
 
     <!-- 根据商品id查询pv -->
     <select id="selectGoodsPVByGoodsId" resultType="java.lang.Integer">
-		select count(id) from ptp where  goods_id = #{goodsId}  and key_event = 'e101900'
+		select count(*) from ptp where  goods_id = #{goodsId}  and key_event = 'e101900'
 			and	created <![CDATA[>=]]> #{startTime} and created <![CDATA[<]]> #{endTime}
 	</select>
 
@@ -42,14 +42,23 @@
 
 	<!--查询商品类目和成交价-->
 	<select id="selectCategoryAndCostByGoodsId" resultType="java.util.HashMap">
-		select category2 as categoty, cost as goodsCost from goods_base where id = #{goodsId} and is_deleted = 0
+		select category2 as category, cost as goodsCost from goods_base where id = #{goodsId} and is_deleted = 0
 	</select>
 
 
 	<!--查询商品类目和成交价-->
 	<select id="selectGoodsPVByGoodsIdAndAppId" resultType="int">
-		select count(id) from ptp where  goods_id = #{goodsId} and app_id = #{appId}  and key_event = 'e101900'
+		select count(*) from ptp where  goods_id = #{goodsId} and app_id = #{appId}  and key_event = 'e101900'
 			and	created <![CDATA[>=]]> #{startTime} and created <![CDATA[<]]> #{endTime}
+	</select>
+
+
+	<!--查询商品名称-->
+	<select id="selectGoodsNamesByGoodsIds" resultType="java.util.HashMap">
+		select id as goodsId, title as `name` from goods_base where is_deleted = 0 and id in
+		<foreach collection="goodsIds" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
 	</select>
 
 </mapper>
