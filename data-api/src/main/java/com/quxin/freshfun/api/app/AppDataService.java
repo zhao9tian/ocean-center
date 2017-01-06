@@ -22,4 +22,29 @@ public interface AppDataService {
      * @return 查询结果
      */
     List<AppOutParam> getAppGoodsVot(Long appId, Long startDate, Long endDate);
+
+    /**
+     * 查询统计时间段内某个公众号下的商品成交量分布数据
+     * @param appId 公众号id
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @return 查询结果
+     */
+    List<AppOutParam> getAppGoodsTv(Long appId, Long startDate, Long endDate);
+
+    /**
+     * 查询统计时间段内公众号成交额分布数据
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @return 查询结果
+     */
+    List<AppOutParam> getAppVot(Long startDate, Long endDate);
+
+    /**
+     * 查询统计时间段内公众号成交量分布数据
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @return 查询结果
+     */
+    List<AppOutParam> getAppTv(Long startDate, Long endDate);
 }
