@@ -7,7 +7,9 @@ import java.util.Date;
  */
 public class AppOutParam {
     //公众号id
-    private Long addId;
+    private Long appId;
+    //公众号名称
+    private String appName;
     //商品id
     private Long goodsId;
     //商品名称
@@ -30,12 +32,20 @@ public class AppOutParam {
     private Integer avgPrice;
     private Date date;
 
-    public Long getAddId() {
-        return addId;
+    public Long getAppId() {
+        return appId;
     }
 
-    public void setAddId(Long addId) {
-        this.addId = addId;
+    public void setAppId(Long appId) {
+        this.appId = appId;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
     }
 
     public Long getGoodsId() {
