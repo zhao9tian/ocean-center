@@ -8,6 +8,14 @@
 		AND create_date <![CDATA[>]]> #{startDate} AND create_date <![CDATA[<]]> #{endDate} AND is_deleted=0 GROUP BY appId,goodsId
 	</select>
 
+    <!--查询公众号名称-->
+    <select id="selectAppNamesByIds" parameterType="java.util.Arrays" resultType="java.util.Map">
+        select app_id as appId, app_name as appName from erp_app_info where is_deleted = 0 and id in
+        <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 	<!--批量插入公众号每日的统计数据-->
 	<insert id="insertAppDataInfo" parameterType="java.util.List">
 		insert into app_data (app_id,goods_id,volume,gmv,gmv_uv,pv,uv,gross_margin,convert_rate,avg_price,date)
@@ -16,27 +24,66 @@
 			(#{item.appId},#{item.goodsId},#{item.volume},#{item.gmv},#{item.gmvUv},#{item.pv},#{item.uv},#{item.grossMargin},#{item.convertRate},#{item.avgPrice},#{item.date})
 		</foreach>
 	</insert>
-
+    <!--获取公众号下商品成交额数据-->
 	<select id="selectAppGoodsVot" resultType="com.quxin.freshfun.api.bean.app.AppOutParam">
 		select app_id as appId ,goods_id as goodsId,sum(gmv) as gmv from app_data where app_id=#{appId} and date <![CDATA[>=]]> #{startDate}
-		and date <![CDATA[<=]]> #{endDate} group by goodsId order by gmv limit 10
+		and date <![CDATA[<=]]> #{endDate} group by goodsId order by gmv DESC limit 10
 	</select>
-
+    <!--获取公众号下商品总成交额数据-->
 	<select id="selectAllAppGoodsVot" resultType="java.lang.Integer">
 		select sum(gmv) as totalGmv from app_data where app_id=#{appId} and date <![CDATA[>=]]> #{startDate}
 		and date <![CDATA[<=]]> #{endDate}
 	</select>
-
+    <!--获取公众号下商品成交量数据-->
 	<select id="selectAppGoodsTv" resultType="com.quxin.freshfun.api.bean.app.AppOutParam">
 		select app_id as appId ,goods_id as goodsId,sum(volume) as volume from app_data where app_id=#{appId} and date <![CDATA[>=]]> #{startDate}
-		and date <![CDATA[<=]]> #{endDate} group by goodsId order by volume limit 10
+		and date <![CDATA[<=]]> #{endDate} group by goodsId order by volume DESC limit 10
 	</select>
-
+    <!--获取公众号下商品总成交量数据-->
 	<select id="selectAllAppGoodsTv" resultType="java.lang.Integer">
 		select sum(volume) as totalVolume from app_data where app_id=#{appId} and date <![CDATA[>=]]> #{startDate}
 		and date <![CDATA[<=]]> #{endDate}
 	</select>
 
-
+    <!--获取商品下公众号成交额数据-->
+    <select id="selectGoodsAppVot" resultType="com.quxin.freshfun.api.bean.app.AppOutParam">
+        select app_id as appId ,goods_id as goodsId,sum(gmv) as gmv from app_data where goods_id=#{goodsId} and date <![CDATA[>=]]> #{startDate}
+        and date <![CDATA[<=]]> #{endDate} group by appId order by gmv DESC limit 10
+    </select>
+    <!--获取商品下公众号总成交额数据-->
+    <select id="selectAllGoodsAppVot" resultType="java.lang.Integer">
+        select sum(gmv) as totalGmv from app_data where goods_id=#{goodsId} and date <![CDATA[>=]]> #{startDate}
+        and date <![CDATA[<=]]> #{endDate}
+    </select>
+    <!--获取商品下公众号成交量数据-->
+    <select id="selectGoodsAppTv" resultType="com.quxin.freshfun.api.bean.app.AppOutParam">
+        select app_id as appId ,goods_id as goodsId,sum(volume) as volume from app_data where goods_id=#{goodsId} and date <![CDATA[>=]]> #{startDate}
+        and date <![CDATA[<=]]> #{endDate} group by goodsId order by volume DESC limit 10
+    </select>
+    <!--获取商品下公众号总成交量数据-->
+    <select id="selectAllGoodsAppTv" resultType="java.lang.Integer">
+        select sum(volume) as totalVolume from app_data where goods_id=#{goodsId} and date <![CDATA[>=]]> #{startDate}
+        and date <![CDATA[<=]]> #{endDate}
+    </select>
+    <!--获取公众号成交额数据-->
+    <select id="selectAppVot" resultType="com.quxin.freshfun.api.bean.app.AppOutParam">
+        select app_id as appId ,sum(gmv) as gmv from app_data where date <![CDATA[>=]]> #{startDate}
+		and date <![CDATA[<=]]> #{endDate} group by appId order by gmv DESC limit 10
+    </select>
+    <!--获取公众号总成交额数据-->
+    <select id="selectAllAppVot" resultType="java.lang.Integer">
+        select sum(gmv) as totalGmv from app_data where date <![CDATA[>=]]> #{startDate}
+		and date <![CDATA[<=]]> #{endDate}
+    </select>
+    <!--获取公众号成交量数据-->
+    <select id="selectAppTv" resultType="com.quxin.freshfun.api.bean.app.AppOutParam">
+        select app_id as appId ,sum(volume) as volume from app_data where date <![CDATA[>=]]> #{startDate}
+		and date <![CDATA[<=]]> #{endDate} group by appId order by volume DESC limit 10
+    </select>
+    <!--获取公众号总成交量数据-->
+    <select id="selectAllAppTv" resultType="java.lang.Integer">
+        select sum(volume) as totalVolume from app_data where date <![CDATA[>=]]> #{startDate}
+		and date <![CDATA[<=]]> #{endDate}
+    </select>
 
 </mapper>
