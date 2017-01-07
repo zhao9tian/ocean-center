@@ -12,12 +12,6 @@ import java.util.Map;
 public interface GoodsService {
 
 
-    /**
-     * 根据商品Id查询商品详情
-     * @param ids 商品Id
-     * @return 返回商品信息
-     */
-    List<GoodsPOJO> selectGoodsNameById(Long[] ids);
 
     /**
      * 查询一段时间内gmv前十的商品
@@ -71,6 +65,12 @@ public interface GoodsService {
      */
     List<Map<String , Object>> getGoodsVolumeTopTenByCategory(Integer category , Long startTime , Long endTime);
 
-
+    /**
+     * 查询一段时间内的商品指标
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 商品指标
+     */
+    Map<String , Object> getGoodsIndicator(List<Long> goodsIds , Long startTime , Long endTime);
 
 }

@@ -1,7 +1,6 @@
 package com.quxin.freshfun.impl.goods;
 
 import com.google.common.collect.Maps;
-import com.quxin.freshfun.api.bean.GoodsPOJO;
 import com.quxin.freshfun.api.goods.GoodsDataService;
 import com.quxin.freshfun.api.goods.GoodsService;
 import com.quxin.freshfun.dao.GoodsMapper;
@@ -35,16 +34,6 @@ public class GoodsServiceImpl implements GoodsService {
 
     Logger logger = LoggerFactory.getLogger(GoodsServiceImpl.class);
 
-    /**
-     * 根据商品Id查询商品详情
-     *
-     * @param ids 商品Id
-     * @return 返回商品信息
-     */
-    @Override
-    public List<GoodsPOJO> selectGoodsNameById(Long[] ids) {
-        return goodsMapper.selectGoodsNameById(ids);
-    }
 
     @Override
     public List<Map<String, Object>> getGoodsGMVTopTen(Long startTime, Long endTime) {
@@ -225,7 +214,7 @@ public class GoodsServiceImpl implements GoodsService {
         DynamicDataSourceHolder.setDataSource(DynamicDataSource.OCEAN_DATA);
         Long sumVolumeByCategory = goodsMapper.selectSumVolumeByCategory(category,
                 TimestampUtils.getStringDateFromLong(startTime), TimestampUtils.getStringDateFromLong(endTime));
-        if(sumVolumeByCategory != null){
+        if (sumVolumeByCategory != null) {
             List<Map<String, Object>> goodsVolumeTopTenByCategory = goodsMapper.selectVolumeTopTenGoodsByCategory(category,
                     TimestampUtils.getStringDateFromLong(startTime), TimestampUtils.getStringDateFromLong(endTime));
             List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
@@ -257,8 +246,147 @@ public class GoodsServiceImpl implements GoodsService {
                 result.add(other);
             }
             return result;
-        }else{
+        } else {
             logger.error("该时间段内没有数据");
+        }
+        return null;
+    }
+
+    @Override
+    public Map<String, Object> getGoodsIndicator(List<Long> goodsIds, Long startTime, Long endTime) {
+        if (goodsIds != null && goodsIds.size() > 0) {
+            Long[] goodsIdsArr = new Long[goodsIds.size()];
+            int i = 0;
+            for (Long goodsId : goodsIds) {
+                goodsIdsArr[i] = goodsId;
+                i++;
+            }
+            //设置数据源
+            Map<Long, Object> goodsNames = goodsDataService.getGoodsNamesByGoodsIds(goodsIdsArr);
+            //获取x轴
+            String[] dates = TimestampUtils.getDates(startTime, endTime);
+            DynamicDataSourceHolder.setDataSource(DynamicDataSource.OCEAN_DATA);
+            //查询时间段内商品指标的数据
+            List<Map<String, Object>> allGoodsIndicator = goodsMapper.selectGoodsIndicator(goodsIds,
+                    TimestampUtils.getStringDateFromLong(startTime), TimestampUtils.getStringDateFromLong(endTime));
+            Map<String , Object> result = Maps.newHashMap();
+            //日期处理
+            Map<String , Object> data = Maps.newHashMap();
+            List<Map<String , Object>> xAxisValue = new ArrayList<>();
+            data.put("data" , dates);
+            xAxisValue.add(data);
+            result.put("xAxis" , xAxisValue);
+            if (allGoodsIndicator.size() > 0) {
+                Map<String, Object> pv = Maps.newHashMap();
+                Map<String, Object> uv = Maps.newHashMap();
+                Map<String, Object> avgPrice = Maps.newHashMap();
+                Map<String, Object> grossMargin = Maps.newHashMap();
+                Map<String, Object> convertRate = Maps.newHashMap();
+                Map<String, Object> gmv = Maps.newHashMap();
+                Map<String, Object> gmvUv = Maps.newHashMap();
+                Map<String, Object> sevenRpr = Maps.newHashMap();
+                Map<String, Object> monthRpr = Maps.newHashMap();
+                List<Map<String, Object>> seriesPv = new ArrayList<>();
+                List<Map<String, Object>> seriesUv = new ArrayList<>();
+                List<Map<String, Object>> seriesAvgPrice = new ArrayList<>();
+                List<Map<String, Object>> seriesGrossMargin = new ArrayList<>();
+                List<Map<String, Object>> seriesConvertRate = new ArrayList<>();
+                List<Map<String, Object>> seriesGmv = new ArrayList<>();
+                List<Map<String, Object>> seriesGmvUv = new ArrayList<>();
+                List<Map<String, Object>> seriesSevenRpr = new ArrayList<>();
+                List<Map<String, Object>> seriesMonthRpr = new ArrayList<>();
+                for (Long goodsId : goodsIds) {
+                    List<Map<String, Object>> goods = new ArrayList<>();
+                    //商品基本信息
+                    Map<String, Object> goodsMapPv = Maps.newHashMap();
+                    Map<String, Object> goodsMapUv = Maps.newHashMap();
+                    Map<String, Object> goodsMapAvgPrice = Maps.newHashMap();
+                    Map<String, Object> goodsMapGrossMargin = Maps.newHashMap();
+                    Map<String, Object> goodsMapConvertRate = Maps.newHashMap();
+                    Map<String, Object> goodsMapGmv = Maps.newHashMap();
+                    Map<String, Object> goodsMapGmvUv = Maps.newHashMap();
+                    Map<String, Object> goodsMapSevenRpr = Maps.newHashMap();
+                    Map<String, Object> goodsMapMonthRpr = Maps.newHashMap();
+                    goodsMapPv.put("name", goodsNames.get(goodsId));
+                    goodsMapUv.put("name", goodsNames.get(goodsId));
+                    goodsMapAvgPrice.put("name", goodsNames.get(goodsId));
+                    goodsMapGrossMargin.put("name", goodsNames.get(goodsId));
+                    goodsMapConvertRate.put("name", goodsNames.get(goodsId));
+                    goodsMapGmv.put("name", goodsNames.get(goodsId));
+                    goodsMapGmvUv.put("name", goodsNames.get(goodsId));
+                    goodsMapSevenRpr.put("name", goodsNames.get(goodsId));
+                    goodsMapMonthRpr.put("name", goodsNames.get(goodsId));
+                    //将id相同的数据统一起来重新排序,获取按时间排序的指标
+                    for (Map<String, Object> map : allGoodsIndicator) {
+                        if (goodsId.equals(Long.parseLong(map.get("goodsId").toString()))) {
+                            goods.add(map);
+                        }
+                    }
+                    List<Integer> pvArr = new ArrayList<>();
+                    List<Integer> uvArr = new ArrayList<>();
+                    List<Double> avgPriceArr = new ArrayList<>();
+                    List<Double> grossMarginArr = new ArrayList<>();
+                    List<Double> convertRateArr = new ArrayList<>();
+                    List<Double> gmvArr = new ArrayList<>();
+                    List<Double> gmvUvArr = new ArrayList<>();
+                    List<Double> sevenRprArr = new ArrayList<>();
+                    List<Double> monthRprArr = new ArrayList<>();
+                    for (String date : dates) {
+                        for (Map<String, Object> map : goods) { //根据时间排序pv
+                            if (date.equals(map.get("created").toString())) {
+                                pvArr.add(Integer.parseInt(map.get("pv").toString()));
+                                uvArr.add(Integer.parseInt(map.get("uv").toString()));
+                                avgPriceArr.add(Double.parseDouble(map.get("avgPrice").toString()) / 100);
+                                grossMarginArr.add(Double.parseDouble(map.get("grossMargin").toString()) / 100);
+                                convertRateArr.add(Double.parseDouble(map.get("convertRate").toString()) / 100);
+                                gmvArr.add(Double.parseDouble(map.get("gmv").toString()) / 100);
+                                gmvUvArr.add(Double.parseDouble(map.get("gmvUv").toString()) / 100);
+                                sevenRprArr.add(Double.parseDouble(map.get("sevenRpr").toString()) / 100);
+                                monthRprArr.add(Double.parseDouble(map.get("monthRpr").toString()) / 100);
+                            }
+                        }
+                    }
+                    goodsMapPv.put("data", pvArr);//pv数组
+                    seriesPv.add(goodsMapPv);
+                    goodsMapUv.put("data", uvArr);//uv数组
+                    seriesUv.add(goodsMapUv);
+                    goodsMapAvgPrice.put("data", avgPriceArr);
+                    seriesAvgPrice.add(goodsMapAvgPrice);
+                    goodsMapGrossMargin.put("data", grossMarginArr);
+                    seriesGrossMargin.add(goodsMapGrossMargin);
+                    goodsMapConvertRate.put("data", convertRateArr);
+                    seriesConvertRate.add(goodsMapConvertRate);
+                    goodsMapGmv.put("data", gmvArr);
+                    seriesGmv.add(goodsMapGmv);
+                    goodsMapGmvUv.put("data", gmvUvArr);
+                    seriesGmvUv.add(goodsMapGmvUv);
+                    goodsMapSevenRpr.put("data", sevenRprArr);
+                    seriesSevenRpr.add(goodsMapSevenRpr);
+                    goodsMapMonthRpr.put("data", monthRprArr);
+                    seriesMonthRpr.add(goodsMapMonthRpr);
+                }
+                pv.put("series", seriesPv);
+                uv.put("series", seriesUv);
+                avgPrice.put("series", seriesAvgPrice);
+                grossMargin.put("series", seriesGrossMargin);
+                convertRate.put("series", seriesConvertRate);
+                gmv.put("series", seriesGmv);
+                gmvUv.put("series", seriesGmvUv);
+                sevenRpr.put("series", seriesSevenRpr);
+                monthRpr.put("series", seriesMonthRpr);
+
+                result.put("pv" , pv);
+                result.put("uv" , uv);
+                result.put("avgPrice" , avgPrice);
+                result.put("grossMargin" , grossMargin);
+                result.put("convertRate" , convertRate);
+                result.put("gmv" , gmv);
+                result.put("gmvUv" , gmvUv);
+                result.put("sevenRpr" , sevenRpr);
+                result.put("monthRpr" , monthRpr);
+            } else {
+                logger.error(TimestampUtils.getStringDateFromLong(startTime) + "到" + TimestampUtils.getStringDateFromLong(endTime) + "期间没有数据");
+            }
         }
         return null;
     }

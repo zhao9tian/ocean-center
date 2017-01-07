@@ -7,6 +7,8 @@ import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 商品单元测试
@@ -59,10 +61,14 @@ public class GoodsTest extends TestBase {
 
 //        System.out.println(goodsService.getGoodsGMVTopTen(1483718400L ,1483718400L));
 //        System.out.println(goodsService.getGoodsVolumeTopTen(1483632000L ,1483632000L));
-        System.out.println(goodsService.getCategoryGmvTopTen(1483718400L ,1483718400L));
+//        System.out.println(goodsService.getCategoryGmvTopTen(1483718400L ,1483718400L));
 //        System.out.println(goodsService.getGoodsGmvTopTenByCategory(108 ,1483632000L ,1483632000L));
 //        System.out.println(goodsService.getCategoryVolumeTopTen(1483632000L ,1483632000L));
 //        System.out.println(goodsService.getGoodsVolumeTopTenByCategory(106 ,1483632000L ,1483632000L));
+        List<Long> ids = new ArrayList<Long>();
+        ids.add(55L);
+        ids.add(60L);
+        goodsService.getGoodsIndicator(ids ,1483622000L ,1483718400L );
     }
 
     public static void main(String[] args) {

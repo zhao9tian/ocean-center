@@ -8,15 +8,6 @@
 			and	created <![CDATA[>=]]> #{startTime} and created <![CDATA[<]]> #{endTime}
 	</select>
 
-    <select id="selectGoodsNameById" parameterType="java.util.Arrays"
-            resultType="com.quxin.freshfun.api.bean.GoodsPOJO">
-        select id as goodsId,title as title from goods_base where id in
-        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </select>
-
-
     <!-- 根据商品id查询7天下单用户-->
     <select id="selectOrderedUsersByGoodsId" resultType="long">
 		select distinct user_id from order_details where is_deleted = 0 and
@@ -134,6 +125,16 @@
     <!--查询指定时间段内某个品类的商品volume总和-->
     <select id="selectSumVolumeByCategory" resultType="java.lang.Long">
         select sum(volume) from goods_data where category = #{categoryId} and `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
+    </select>
+
+
+    <select id="selectGoodsIndicator" resultType="java.util.HashMap">
+        select goods_id as goodsId , `date` as `created` , pv ,uv ,category , gmv , gmv_uv as gmvUv, volume , seven_rpr as sevenRpr , month_rpr as monthRpr ,
+              gross_margin as grossMargin , convert_rate as convertRate , avg_price as avgPrice from goods_data where goods_id in
+              <foreach collection="goodsIds" index="index" item="item" open="(" separator="," close=")">
+                  #{item}
+              </foreach>
+              and `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
     </select>
 
 </mapper>

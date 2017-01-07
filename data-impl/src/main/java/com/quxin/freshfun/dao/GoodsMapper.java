@@ -1,6 +1,5 @@
 package com.quxin.freshfun.dao;
 
-import com.quxin.freshfun.api.bean.GoodsPOJO;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -14,53 +13,50 @@ public interface GoodsMapper {
 
     /**
      * 商品PV
-     * @param goodsId 商品id
+     *
+     * @param goodsId   商品id
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return 商品pv
      */
-    Integer selectGoodsPVByGoodsId(@Param("goodsId") Long goodsId,@Param("startTime") Long startTime, @Param("endTime") Long endTime);
+    Integer selectGoodsPVByGoodsId(@Param("goodsId") Long goodsId, @Param("startTime") Long startTime, @Param("endTime") Long endTime);
 
 
     /**
      * 查询下单的用户数
-     * @param goodsId 商品id
+     *
+     * @param goodsId   商品id
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return 下单用户id
      */
-    List<Long> selectOrderedUsersByGoodsId(@Param("goodsId") Long goodsId,@Param("startTime") Long startTime, @Param("endTime") Long endTime);
+    List<Long> selectOrderedUsersByGoodsId(@Param("goodsId") Long goodsId, @Param("startTime") Long startTime, @Param("endTime") Long endTime);
 
     /**
      * 查询重复购买的用户数
-     * @param goodsId 商品Id
+     *
+     * @param goodsId   商品Id
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return 复购id
      */
-    List<Long> selectRepeatedUsersByGoodsId(@Param("goodsId") Long goodsId, @Param("users") List<Long> users , @Param("startTime") Long startTime,
-                                         @Param("endTime") Long endTime);
+    List<Long> selectRepeatedUsersByGoodsId(@Param("goodsId") Long goodsId, @Param("users") List<Long> users, @Param("startTime") Long startTime,
+                                            @Param("endTime") Long endTime);
 
-//    Integer
-
-    /**
-     * 根据商品Id查询商品详情
-     * @param ids 商品Id
-     * @return 返回商品信息
-     */
-    List<GoodsPOJO> selectGoodsNameById(Long[] ids);
 
     /**
      * 根据商品id查询前一天的gmv和成交量
-     * @param goodsId 商品Id
+     *
+     * @param goodsId   商品Id
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return 查询结果
      */
-    Map<String,BigDecimal> selectGMVAndVolumeByGoodsId(@Param("goodsId") Long goodsId, @Param("startTime") Long startTime, @Param("endTime") Long endTime);
+    Map<String, BigDecimal> selectGMVAndVolumeByGoodsId(@Param("goodsId") Long goodsId, @Param("startTime") Long startTime, @Param("endTime") Long endTime);
 
     /**
      * 商品id查询类目
+     *
      * @param goodsId 商品id
      * @return 类目id
      */
@@ -68,24 +64,27 @@ public interface GoodsMapper {
 
     /**
      * 查询app下面的商品前一天的pv
-     * @param goodsId 商品id
-     * @param appId appId
+     *
+     * @param goodsId   商品id
+     * @param appId     appId
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return pv
      */
-    Integer selectGoodsPVByGoodsIdAndAppId(@Param("goodsId") Long goodsId, @Param("appId") Long appId ,
+    Integer selectGoodsPVByGoodsIdAndAppId(@Param("goodsId") Long goodsId, @Param("appId") Long appId,
                                            @Param("startTime") Long startTime, @Param("endTime") Long endTime);
 
     /**
      * 根据商品Ids批量查询商品名称
+     *
      * @param goodsIds 商品id
      * @return 列表结果
      */
-    List<Map<String,Object>> selectGoodsNamesByGoodsIds(@Param("goodsIds") Long[] goodsIds);
+    List<Map<String, Object>> selectGoodsNamesByGoodsIds(@Param("goodsIds") Long[] goodsIds);
 
     /**
      * 插入商品数据指标
+     *
      * @param goodsData 商品指标
      * @return 插入记录数
      */
@@ -93,65 +92,73 @@ public interface GoodsMapper {
 
     /**
      * 查询所有商品Id
+     *
      * @return goodsIds
      */
     List<Long> selectAllGoodsIds();
 
     /**
      * 所有商品的gmv总和
+     *
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return 总和
      */
     Long selectSumGmv(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
     /**
      * 前十的商品的id和gmv
+     *
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return 前十的商品的id和gmv
      */
-    List<Map<String,Object>> selectGmvTopTenGoods(@Param("startTime") String startTime, @Param("endTime") String endTime);
+    List<Map<String, Object>> selectGmvTopTenGoods(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
     /**
      * 所有商品的volume总和
+     *
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return volume总和
      */
     Long selectSumVolume(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
     /**
      * 前十的商品的id和volume
+     *
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return 前十的商品的id和volume
      */
-    List<Map<String,Object>> selectVolumeTopTenGoods(@Param("startTime") String startTime, @Param("endTime") String endTime);
+    List<Map<String, Object>> selectVolumeTopTenGoods(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
     /**
      * 查询前8个品类的gmv排名和占比
+     *
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return 品类的排名占比
      */
-    List<Map<String,Object>> selectGmvTopTenCategory(@Param("startTime") String startTime, @Param("endTime") String endTime);
+    List<Map<String, Object>> selectGmvTopTenCategory(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
     /**
      * 查询类目下gmv前十的商品信息
-     * @param category 类目
+     *
+     * @param category  类目
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return gmv前十的商品信息
      */
-    List<Map<String,Object>> selectGmvTopTenGoodsByCategory(@Param("categoryId") Integer category,
-                                                            @Param("startTime") String startTime, @Param("endTime") String endTime);
+    List<Map<String, Object>> selectGmvTopTenGoodsByCategory(@Param("categoryId") Integer category,
+                                                             @Param("startTime") String startTime, @Param("endTime") String endTime);
 
     /**
      * 类目下所有商品的gmv总和
-     * @param category 类目
+     *
+     * @param category  类目
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return 总和
      */
     Long selectSumGmvByCategory(@Param("categoryId") Integer category,
@@ -159,28 +166,41 @@ public interface GoodsMapper {
 
     /**
      * 查询前8个品类的volume排名和占比
+     *
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return 品类的排名占比
      */
-    List<Map<String,Object>> selectVolumeTopTenCategory(@Param("startTime") String startTime, @Param("endTime") String endTime);
+    List<Map<String, Object>> selectVolumeTopTenCategory(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
     /**
      * 查询类目下volume前十的商品信息
-     * @param category 类目
+     *
+     * @param category  类目
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return volume前十的商品信息
      */
-    List<Map<String,Object>> selectVolumeTopTenGoodsByCategory(@Param("categoryId") Integer category,
-                                                               @Param("startTime") String startTime, @Param("endTime") String endTime);
+    List<Map<String, Object>> selectVolumeTopTenGoodsByCategory(@Param("categoryId") Integer category,
+                                                                @Param("startTime") String startTime, @Param("endTime") String endTime);
+
     /**
      * 类目下所有商品的volume总和
-     * @param category 类目
+     *
+     * @param category  类目
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return 总和
      */
     Long selectSumVolumeByCategory(@Param("categoryId") Integer category,
                                    @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * 商品ids
+     * @param goodsIds 商品
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 返回结果
+     */
+    List<Map<String,Object>> selectGoodsIndicator(@Param("goodsIds") List<Long> goodsIds, @Param("startTime") String startTime, @Param("endTime") String endTime);
 }

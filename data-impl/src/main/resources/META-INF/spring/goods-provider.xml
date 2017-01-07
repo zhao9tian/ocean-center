@@ -6,7 +6,7 @@
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
     <!--业务服务-->
-    <dubbo:service interface="com.quxin.freshfun.api.goods.GoodsService" ref="goodsService" protocol="dubbo"/>
+    <dubbo:service interface="com.quxin.freshfun.api.goods.GoodsService" ref="goodsService" protocol="dubbo" timeout="6000"/>
 
     <!--bean 实现-->
     <bean id="goodsService" class="com.quxin.freshfun.impl.goods.GoodsServiceImpl"/>
@@ -14,5 +14,7 @@
     <!--appData服务-->
     <dubbo:service interface="com.quxin.freshfun.api.app.AppDataService" ref="appDataService" protocol="dubbo"/>
     <bean id="appDataService" class="com.quxin.freshfun.impl.app.AppDataServiceImpl"/>
+
+
 
 </beans>
