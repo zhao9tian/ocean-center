@@ -318,39 +318,39 @@ public class AppDataServiceImpl implements AppDataService{
         String end = TimestampUtils.getStringDateFromLong(endDate);
         Map<String, Object> result = new HashMap<String, Object>();
         DynamicDataSourceHolder.setDataSource(DynamicDataSource.OCEAN_DATA);
-        List<AppOutParam> list = appDataMapper.selectAppGoodsInfo(appId,goodsIds,start,end);
-        for(AppOutParam appOutParam : list){
+        List<AppOutParam> list = appDataMapper.selectAppGoodsInfo(appId, goodsIds, start, end);
+        for (AppOutParam appOutParam : list) {
             String dateString = TimestampUtils.getStringDateFromDate(appOutParam.getDate());
-            if(result.get(dateString)==null){
+            if (result.get(dateString) == null) {
                 Map<String, Object> map = new HashMap<String, Object>();
-                result.put(dateString,map);
+                result.put(dateString, map);
             }
-            Map<String, Object> map = (Map<String, Object>)result.get(dateString);
-            map.put(appOutParam.getGoodsId().toString(),appOutParam);
+            Map<String, Object> map = (Map<String, Object>) result.get(dateString);
+            map.put(appOutParam.getGoodsId().toString(), appOutParam);
         }
-        Map<String,Object> mapPv = new HashMap<String, Object>();
-        List<Map<String,Object>> mapPvList = new ArrayList<Map<String, Object>>();
-        mapPv.put("series",mapPvList);
-        Map<String,Object> mapUv = new HashMap<String, Object>();
-        List<Map<String,Object>> mapUvList = new ArrayList<Map<String, Object>>();
-        mapUv.put("series",mapUvList);
-        Map<String,Object> mapGmv = new HashMap<String, Object>();
-        List<Map<String,Object>> mapGmvList = new ArrayList<Map<String, Object>>();
-        mapGmv.put("series",mapGmvList);
-        Map<String,Object> mapGmvUv = new HashMap<String, Object>();
-        List<Map<String,Object>> mapGmvUvList = new ArrayList<Map<String, Object>>();
-        mapGmvUv.put("series",mapGmvUvList);
-        Map<String,Object> mapGrossMargin = new HashMap<String, Object>();
-        List<Map<String,Object>> mapGrossMarginList = new ArrayList<Map<String, Object>>();
-        mapGrossMargin.put("series",mapGrossMarginList);
-        Map<String,Object> mapConvertRate = new HashMap<String, Object>();
-        List<Map<String,Object>> mapConvertRateList = new ArrayList<Map<String, Object>>();
-        mapConvertRate.put("series",mapConvertRateList);
-        Map<String,Object> mapAvgPrice = new HashMap<String, Object>();
-        List<Map<String,Object>> mapAvgPriceList = new ArrayList<Map<String, Object>>();
-        mapAvgPrice.put("series",mapAvgPriceList);
-        Map<Long,Object> nameMap = goodsDataService.getGoodsNamesByGoodsIds(goodsIds);
-        String[] dates = TimestampUtils.getDates(startDate,endDate);
+        Map<String, Object> mapPv = new HashMap<String, Object>();
+        List<Map<String, Object>> mapPvList = new ArrayList<Map<String, Object>>();
+        mapPv.put("series", mapPvList);
+        Map<String, Object> mapUv = new HashMap<String, Object>();
+        List<Map<String, Object>> mapUvList = new ArrayList<Map<String, Object>>();
+        mapUv.put("series", mapUvList);
+        Map<String, Object> mapGmv = new HashMap<String, Object>();
+        List<Map<String, Object>> mapGmvList = new ArrayList<Map<String, Object>>();
+        mapGmv.put("series", mapGmvList);
+        Map<String, Object> mapGmvUv = new HashMap<String, Object>();
+        List<Map<String, Object>> mapGmvUvList = new ArrayList<Map<String, Object>>();
+        mapGmvUv.put("series", mapGmvUvList);
+        Map<String, Object> mapGrossMargin = new HashMap<String, Object>();
+        List<Map<String, Object>> mapGrossMarginList = new ArrayList<Map<String, Object>>();
+        mapGrossMargin.put("series", mapGrossMarginList);
+        Map<String, Object> mapConvertRate = new HashMap<String, Object>();
+        List<Map<String, Object>> mapConvertRateList = new ArrayList<Map<String, Object>>();
+        mapConvertRate.put("series", mapConvertRateList);
+        Map<String, Object> mapAvgPrice = new HashMap<String, Object>();
+        List<Map<String, Object>> mapAvgPriceList = new ArrayList<Map<String, Object>>();
+        mapAvgPrice.put("series", mapAvgPriceList);
+        Map<Long, Object> nameMap = goodsDataService.getGoodsNamesByGoodsIds(goodsIds);
+        String[] dates = TimestampUtils.getDates(startDate, endDate);
         for (String date : dates) {
             //获取当前时间的结果数据
             Map<String, Object> mapOfDate = (Map<String, Object>) result.get(date);
@@ -391,6 +391,7 @@ public class AppDataServiceImpl implements AppDataService{
                         ((List<Map<String, Object>>) mapAvgPrice.get("series")).add(map7);
                     }
                 }
+                //判断商品是否存在当前日期的数据
                 if (goods != null) {
                     List<Map<String, Object>> listGoods1 = ((List<Map<String, Object>>) mapPv.get("series"));
                     for (Map<String, Object> mapGoods1 : listGoods1) {
@@ -551,19 +552,19 @@ public class AppDataServiceImpl implements AppDataService{
             }
 
         }
-        Map<String,Object> returnMap = new HashMap<String,Object>();
-        returnMap.put("pv",mapPv);
-        returnMap.put("uv",mapUv);
-        returnMap.put("gmv",mapGmv);
-        returnMap.put("gmvUv",mapGmvUv);
-        returnMap.put("convertRate",mapConvertRate);
-        returnMap.put("grossMargin",mapGrossMargin);
-        returnMap.put("avgPrice",mapAvgPrice);
-        Map<String,Object> dateMap = new HashMap<String,Object>();
-        dateMap.put("data",dates);
-        List<Map<String,Object>> dateList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> returnMap = new HashMap<String, Object>();
+        returnMap.put("pv", mapPv);
+        returnMap.put("uv", mapUv);
+        returnMap.put("gmv", mapGmv);
+        returnMap.put("gmvUv", mapGmvUv);
+        returnMap.put("convertRate", mapConvertRate);
+        returnMap.put("grossMargin", mapGrossMargin);
+        returnMap.put("avgPrice", mapAvgPrice);
+        Map<String, Object> dateMap = new HashMap<String, Object>();
+        dateMap.put("data", dates);
+        List<Map<String, Object>> dateList = new ArrayList<Map<String, Object>>();
         dateList.add(dateMap);
-        returnMap.put("xAxis",dateList);
+        returnMap.put("xAxis", dateList);
         return returnMap;
     }
 
