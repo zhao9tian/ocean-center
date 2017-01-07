@@ -391,4 +391,14 @@ public class GoodsServiceImpl implements GoodsService {
         return null;
     }
 
+    @Override
+    public Map<Long, Object> getGoodsNamesByGoodsIds(Long[] goodsIds) {
+        return goodsDataService.getGoodsNamesByGoodsIds(goodsIds);
+    }
+
+
+
+
+
+
 }

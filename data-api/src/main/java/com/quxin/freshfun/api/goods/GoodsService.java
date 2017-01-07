@@ -73,4 +73,11 @@ public interface GoodsService {
      */
     Map<String , Object> getGoodsIndicator(List<Long> goodsIds , Long startTime , Long endTime);
 
+    /**
+     * 根据商品Id查询商品名称
+     * @param goodsIds 商品id
+     * @return 列表 map的key为商品id , value为 商品name
+     */
+    Map<Long, Object> getGoodsNamesByGoodsIds(Long[] goodsIds);
+
 }
