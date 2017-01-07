@@ -24,6 +24,22 @@ public class TimestampUtils {
     }
 
     /**
+     * 根据起止时间获取日期数组
+     * @param startDate 开始时间
+     * @param endDate   截止时间
+     * @return 日期数组
+     */
+    public static String[] getDates(Long startDate, Long endDate){
+        Long length = (endDate-startDate)/86400;
+        Integer days = Integer.parseInt(length.toString())+1;
+        String[] date = new String[days];
+        for(int i=0;i<days;i++){
+            date[i] = TimestampUtils.getStringDateFromLong(startDate+i*86400);
+        }
+        return date;
+    }
+
+    /**
      * 根据时间戳获取年月日时间字符串
      * @param date 时间戳
      * @return 时间字符串

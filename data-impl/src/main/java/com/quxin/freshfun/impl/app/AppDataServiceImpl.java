@@ -350,7 +350,7 @@ public class AppDataServiceImpl implements AppDataService{
         List<Map<String,Object>> mapAvgPriceList = new ArrayList<Map<String, Object>>();
         mapAvgPrice.put("series",mapAvgPriceList);
         Map<Long,Object> nameMap = goodsDataService.getGoodsNamesByGoodsIds(goodsIds);
-        String[] dates = getDates(startDate,endDate);
+        String[] dates = TimestampUtils.getDates(startDate,endDate);
         for (String date : dates) {
             //获取当前时间的结果数据
             Map<String, Object> mapOfDate = (Map<String, Object>) result.get(date);
@@ -557,7 +557,7 @@ public class AppDataServiceImpl implements AppDataService{
         returnMap.put("gmv",mapGmv);
         returnMap.put("gmvUv",mapGmvUv);
         returnMap.put("convertRate",mapConvertRate);
-        returnMap.put("grossMatgin",mapGrossMargin);
+        returnMap.put("grossMargin",mapGrossMargin);
         returnMap.put("avgPrice",mapAvgPrice);
         Map<String,Object> dateMap = new HashMap<String,Object>();
         dateMap.put("data",dates);
@@ -565,22 +565,6 @@ public class AppDataServiceImpl implements AppDataService{
         dateList.add(dateMap);
         returnMap.put("xAxis",dateList);
         return returnMap;
-    }
-
-    /**
-     * 根据起止时间获取日期数组
-     * @param startDate 开始时间
-     * @param endDate   截止时间
-     * @return 日期数组
-     */
-    private String[] getDates(Long startDate, Long endDate){
-        Long length = (endDate-startDate)/86400;
-        Integer days = Integer.parseInt(length.toString())+1;
-        String[] date = new String[days];
-        for(int i=0;i<days;i++){
-            date[i] = TimestampUtils.getStringDateFromLong(startDate+i*86400);
-        }
-        return date;
     }
 
     /**
