@@ -6,7 +6,7 @@
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
     <!--dubbo 基础配置-->
-    <dubbo:application name="goods-center" owner="paul" organization="freshfun"/>
+    <dubbo:application name="ocean-provider" owner="qucheng" organization="freshfun"/>
 
     <!--<dubbo:registry address="zookeeper://120.26.8.237:2181" />-->
     <!--线上环境-->
