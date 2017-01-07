@@ -86,4 +86,13 @@
 		and date <![CDATA[<=]]> #{endDate}
     </select>
 
+    <select id="selectAppGoodsInfo" resultType="com.quxin.freshfun.api.bean.app.AppOutParam">
+        select app_id as appId ,goods_id as goodsId ,pv,uv,gmv,volume,gmv_uv as gmvUv ,gross_margin as grossMargin,convert_rate as convertRate,avg_price as avgPrice,date as date from app_data
+        where app_id=#{appId} and goods_id in
+        <foreach collection="goodsIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and date <![CDATA[>=]]> #{startDate} and date <![CDATA[<=]]> #{endDate}
+    </select>
+
 </mapper>
