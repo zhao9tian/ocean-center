@@ -81,6 +81,7 @@ public class AppDataServiceImpl implements AppDataService{
     public List<Map<String, Object>> getAppGoodsVot(Long appId, Long startDate, Long endDate) {
         String start = TimestampUtils.getStringDateFromLong(startDate);
         String end = TimestampUtils.getStringDateFromLong(endDate);
+        DynamicDataSourceHolder.setDataSource(DynamicDataSource.OCEAN_DATA);
         List<AppOutParam> list = appDataMapper.selectAppGoodsVot(appId, start,end);
         list = setGoodsName(list);
         if(list!=null&&list.size()==10){
@@ -119,6 +120,7 @@ public class AppDataServiceImpl implements AppDataService{
     public List<Map<String, Object>> getAppGoodsTv(Long appId, Long startDate, Long endDate) {
         String start = TimestampUtils.getStringDateFromLong(startDate);
         String end = TimestampUtils.getStringDateFromLong(endDate);
+        DynamicDataSourceHolder.setDataSource(DynamicDataSource.OCEAN_DATA);
         List<AppOutParam> list = appDataMapper.selectAppGoodsTv(appId, start,end);
         list = setGoodsName(list);
         if(list!=null&&list.size()==10){
@@ -157,6 +159,7 @@ public class AppDataServiceImpl implements AppDataService{
     public List<Map<String, Object>> getGoodsAppVot(Long goodsId, Long startDate, Long endDate) {
         String start = TimestampUtils.getStringDateFromLong(startDate);
         String end = TimestampUtils.getStringDateFromLong(endDate);
+        DynamicDataSourceHolder.setDataSource(DynamicDataSource.OCEAN_DATA);
         List<AppOutParam> list = appDataMapper.selectGoodsAppVot(goodsId, start,end);
         list = setAppName(list);
         if(list!=null&&list.size()==10){
@@ -195,6 +198,7 @@ public class AppDataServiceImpl implements AppDataService{
     public List<Map<String, Object>> getGoodsAppTv(Long goodsId, Long startDate, Long endDate) {
         String start = TimestampUtils.getStringDateFromLong(startDate);
         String end = TimestampUtils.getStringDateFromLong(endDate);
+        DynamicDataSourceHolder.setDataSource(DynamicDataSource.OCEAN_DATA);
         List<AppOutParam> list = appDataMapper.selectGoodsAppTv(goodsId, start,end);
         list = setAppName(list);
         if(list!=null&&list.size()==10){
@@ -233,6 +237,7 @@ public class AppDataServiceImpl implements AppDataService{
     public List<Map<String, Object>> getAppVot(Long startDate, Long endDate) {
         String start = TimestampUtils.getStringDateFromLong(startDate);
         String end = TimestampUtils.getStringDateFromLong(endDate);
+        DynamicDataSourceHolder.setDataSource(DynamicDataSource.OCEAN_DATA);
         List<AppOutParam> list = appDataMapper.selectAppVot(start,end);
         list = setAppName(list);
         if(list!=null&&list.size()==10){
@@ -271,6 +276,7 @@ public class AppDataServiceImpl implements AppDataService{
     public List<Map<String, Object>> getAppTv(Long startDate, Long endDate) {
         String start = TimestampUtils.getStringDateFromLong(startDate);
         String end = TimestampUtils.getStringDateFromLong(endDate);
+        DynamicDataSourceHolder.setDataSource(DynamicDataSource.OCEAN_DATA);
         List<AppOutParam> list = appDataMapper.selectAppTv( start,end);
         list = setAppName(list);
         if(list!=null&&list.size()==10){
@@ -307,21 +313,258 @@ public class AppDataServiceImpl implements AppDataService{
      * @return 商品的数据
      */
     @Override
-    public List<Map<String, Object>> getAppGoodsInfo(Long appId, Long[] goodsIds, Long startDate, Long endDate) {
+    public Map<String, Object> getAppGoodsInfo(Long appId, Long[] goodsIds, Long startDate, Long endDate) {
         String start = TimestampUtils.getStringDateFromLong(startDate);
         String end = TimestampUtils.getStringDateFromLong(endDate);
         Map<String, Object> result = new HashMap<String, Object>();
+        DynamicDataSourceHolder.setDataSource(DynamicDataSource.OCEAN_DATA);
         List<AppOutParam> list = appDataMapper.selectAppGoodsInfo(appId,goodsIds,start,end);
         for(AppOutParam appOutParam : list){
-            if(result.get(appOutParam.getDate().toString())==null){
+            String dateString = TimestampUtils.getStringDateFromDate(appOutParam.getDate());
+            if(result.get(dateString)==null){
                 Map<String, Object> map = new HashMap<String, Object>();
+                result.put(dateString,map);
             }
+            Map<String, Object> map = (Map<String, Object>)result.get(dateString);
+            map.put(appOutParam.getGoodsId().toString(),appOutParam);
         }
+        Map<String,Object> mapPv = new HashMap<String, Object>();
+        List<Map<String,Object>> mapPvList = new ArrayList<Map<String, Object>>();
+        mapPv.put("series",mapPvList);
+        Map<String,Object> mapUv = new HashMap<String, Object>();
+        List<Map<String,Object>> mapUvList = new ArrayList<Map<String, Object>>();
+        mapUv.put("series",mapUvList);
+        Map<String,Object> mapGmv = new HashMap<String, Object>();
+        List<Map<String,Object>> mapGmvList = new ArrayList<Map<String, Object>>();
+        mapGmv.put("series",mapGmvList);
+        Map<String,Object> mapGmvUv = new HashMap<String, Object>();
+        List<Map<String,Object>> mapGmvUvList = new ArrayList<Map<String, Object>>();
+        mapGmvUv.put("series",mapGmvUvList);
+        Map<String,Object> mapGrossMargin = new HashMap<String, Object>();
+        List<Map<String,Object>> mapGrossMarginList = new ArrayList<Map<String, Object>>();
+        mapGrossMargin.put("series",mapGrossMarginList);
+        Map<String,Object> mapConvertRate = new HashMap<String, Object>();
+        List<Map<String,Object>> mapConvertRateList = new ArrayList<Map<String, Object>>();
+        mapConvertRate.put("series",mapConvertRateList);
+        Map<String,Object> mapAvgPrice = new HashMap<String, Object>();
+        List<Map<String,Object>> mapAvgPriceList = new ArrayList<Map<String, Object>>();
+        mapAvgPrice.put("series",mapAvgPriceList);
+        Map<Long,Object> nameMap = goodsDataService.getGoodsNamesByGoodsIds(goodsIds);
         String[] dates = getDates(startDate,endDate);
-        for(String date : dates){
+        for (String date : dates) {
+            //获取当前时间的结果数据
+            Map<String, Object> mapOfDate = (Map<String, Object>) result.get(date);
+            if (mapOfDate == null) {
+                mapOfDate = new HashMap<String, Object>();
+            }
+            for (Long goodsId : goodsIds) {
+                AppOutParam goods = (AppOutParam) mapOfDate.get(goodsId.toString());
+                if (((List<Map<String, Object>>) mapPv.get("series")).size() == 0) {
+                    for (Long id : goodsIds) {
+                        Map<String, Object> map1 = new HashMap<String, Object>();
+                        map1.put("goodsId", id);
+                        map1.put("name", nameMap.get(id));
+                        ((List<Map<String, Object>>) mapPv.get("series")).add(map1);
+                        Map<String, Object> map2 = new HashMap<String, Object>();
+                        map2.put("goodsId", id);
+                        map2.put("name", nameMap.get(id));
+                        ((List<Map<String, Object>>) mapUv.get("series")).add(map2);
+                        Map<String, Object> map3 = new HashMap<String, Object>();
+                        map3.put("goodsId", id);
+                        map3.put("name", nameMap.get(id));
+                        ((List<Map<String, Object>>) mapGmv.get("series")).add(map3);
+                        Map<String, Object> map4 = new HashMap<String, Object>();
+                        map4.put("goodsId", id);
+                        map4.put("name", nameMap.get(id));
+                        ((List<Map<String, Object>>) mapGmvUv.get("series")).add(map4);
+                        Map<String, Object> map5 = new HashMap<String, Object>();
+                        map5.put("goodsId", id);
+                        map5.put("name", nameMap.get(id));
+                        ((List<Map<String, Object>>) mapGrossMargin.get("series")).add(map5);
+                        Map<String, Object> map6 = new HashMap<String, Object>();
+                        map6.put("goodsId", id);
+                        map6.put("name", nameMap.get(id));
+                        ((List<Map<String, Object>>) mapConvertRate.get("series")).add(map6);
+                        Map<String, Object> map7 = new HashMap<String, Object>();
+                        map7.put("goodsId", id);
+                        map7.put("name", nameMap.get(id));
+                        ((List<Map<String, Object>>) mapAvgPrice.get("series")).add(map7);
+                    }
+                }
+                if (goods != null) {
+                    List<Map<String, Object>> listGoods1 = ((List<Map<String, Object>>) mapPv.get("series"));
+                    for (Map<String, Object> mapGoods1 : listGoods1) {
+                        if (mapGoods1.get("goodsId").toString().equals(goodsId.toString())) {
+                            Object data = mapGoods1.get("data");
+                            if (data == null) {
+                                mapGoods1.put("data", goods.getPv());
+                            } else {
+                                mapGoods1.put("data", data.toString() + "," + goods.getPv());
+                            }
+                        }
+                    }
+                    List<Map<String, Object>> listGoods2 = ((List<Map<String, Object>>) mapUv.get("series"));
+                    for (Map<String, Object> mapGoods2 : listGoods2) {
+                        if (mapGoods2.get("goodsId").toString().equals(goodsId.toString())) {
+                            Object data = mapGoods2.get("data");
+                            if (data == null) {
+                                mapGoods2.put("data", goods.getUv());
+                            } else {
+                                mapGoods2.put("data", data.toString() + "," + goods.getUv());
+                            }
+                        }
+                    }
+                    List<Map<String, Object>> listGoods3 = ((List<Map<String, Object>>) mapGmv.get("series"));
+                    for (Map<String, Object> mapGoods3 : listGoods3) {
+                        if (mapGoods3.get("goodsId").toString().equals(goodsId.toString())) {
+                            Object data = mapGoods3.get("data");
+                            if (data == null) {
+                                mapGoods3.put("data", goods.getGmv());
+                            } else {
+                                mapGoods3.put("data", data.toString() + "," + goods.getGmv());
+                            }
+                        }
+                    }
+                    List<Map<String, Object>> listGoods4 = ((List<Map<String, Object>>) mapGmvUv.get("series"));
+                    for (Map<String, Object> mapGoods4 : listGoods4) {
+                        if (mapGoods4.get("goodsId").toString().equals(goodsId.toString())) {
+                            Object data = mapGoods4.get("data");
+                            if (data == null) {
+                                mapGoods4.put("data", goods.getGmvUv());
+                            } else {
+                                mapGoods4.put("data", data.toString() + "," + goods.getGmvUv());
+                            }
+                        }
+                    }
+                    List<Map<String, Object>> listGoods5 = ((List<Map<String, Object>>) mapGrossMargin.get("series"));
+                    for (Map<String, Object> mapGoods5 : listGoods5) {
+                        if (mapGoods5.get("goodsId").toString().equals(goodsId.toString())) {
+                            Object data = mapGoods5.get("data");
+                            if (data == null) {
+                                mapGoods5.put("data", goods.getGrossMargin());
+                            } else {
+                                mapGoods5.put("data", data.toString() + "," + goods.getGrossMargin());
+                            }
+                        }
+                    }
+                    List<Map<String, Object>> listGoods6 = ((List<Map<String, Object>>) mapConvertRate.get("series"));
+                    for (Map<String, Object> mapGoods6 : listGoods6) {
+                        if (mapGoods6.get("goodsId").toString().equals(goodsId.toString())) {
+                            Object data = mapGoods6.get("data");
+                            if (data == null) {
+                                mapGoods6.put("data", goods.getConvertRate());
+                            } else {
+                                mapGoods6.put("data", data.toString() + "," + goods.getConvertRate());
+                            }
+                        }
+                    }
+                    List<Map<String, Object>> listGoods7 = ((List<Map<String, Object>>) mapAvgPrice.get("series"));
+                    for (Map<String, Object> mapGoods7 : listGoods7) {
+                        if (mapGoods7.get("goodsId").toString().equals(goodsId.toString())) {
+                            Object data = mapGoods7.get("data");
+                            if (data == null) {
+                                mapGoods7.put("data", goods.getAvgPrice());
+                            } else {
+                                mapGoods7.put("data", data.toString() + "," + goods.getAvgPrice());
+                            }
+                        }
+                    }
+                } else {
+                    List<Map<String, Object>> listGoods1 = ((List<Map<String, Object>>) mapPv.get("series"));
+                    for (Map<String, Object> mapGoods1 : listGoods1) {
+                        if (mapGoods1.get("goodsId").toString().equals(goodsId.toString())) {
+                            Object data = mapGoods1.get("data");
+                            if (data == null) {
+                                mapGoods1.put("data", 0);
+                            } else {
+                                mapGoods1.put("data", data.toString() + "," + 0);
+                            }
+                        }
+                    }
+                    List<Map<String, Object>> listGoods2 = ((List<Map<String, Object>>) mapUv.get("series"));
+                    for (Map<String, Object> mapGoods2 : listGoods2) {
+                        if (mapGoods2.get("goodsId").toString().equals(goodsId.toString())) {
+                            Object data = mapGoods2.get("data");
+                            if (data == null) {
+                                mapGoods2.put("data", 0);
+                            } else {
+                                mapGoods2.put("data", data.toString() + "," + 0);
+                            }
+                        }
+                    }
+                    List<Map<String, Object>> listGoods3 = ((List<Map<String, Object>>) mapGmv.get("series"));
+                    for (Map<String, Object> mapGoods3 : listGoods3) {
+                        if (mapGoods3.get("goodsId").toString().equals(goodsId.toString())) {
+                            Object data = mapGoods3.get("data");
+                            if (data == null) {
+                                mapGoods3.put("data", 0);
+                            } else {
+                                mapGoods3.put("data", data.toString() + "," + 0);
+                            }
+                        }
+                    }
+                    List<Map<String, Object>> listGoods4 = ((List<Map<String, Object>>) mapGmvUv.get("series"));
+                    for (Map<String, Object> mapGoods4 : listGoods4) {
+                        if (mapGoods4.get("goodsId").toString().equals(goodsId.toString())) {
+                            Object data = mapGoods4.get("data");
+                            if (data == null) {
+                                mapGoods4.put("data", 0);
+                            } else {
+                                mapGoods4.put("data", data.toString() + "," + 0);
+                            }
+                        }
+                    }
+                    List<Map<String, Object>> listGoods5 = ((List<Map<String, Object>>) mapGrossMargin.get("series"));
+                    for (Map<String, Object> mapGoods5 : listGoods5) {
+                        if (mapGoods5.get("goodsId").toString().equals(goodsId.toString())) {
+                            Object data = mapGoods5.get("data");
+                            if (data == null) {
+                                mapGoods5.put("data", 0);
+                            } else {
+                                mapGoods5.put("data", data.toString() + "," + 0);
+                            }
+                        }
+                    }
+                    List<Map<String, Object>> listGoods6 = ((List<Map<String, Object>>) mapConvertRate.get("series"));
+                    for (Map<String, Object> mapGoods6 : listGoods6) {
+                        if (mapGoods6.get("goodsId").toString().equals(goodsId.toString())) {
+                            Object data = mapGoods6.get("data");
+                            if (data == null) {
+                                mapGoods6.put("data", 0);
+                            } else {
+                                mapGoods6.put("data", data.toString() + "," + 0);
+                            }
+                        }
+                    }
+                    List<Map<String, Object>> listGoods7 = ((List<Map<String, Object>>) mapAvgPrice.get("series"));
+                    for (Map<String, Object> mapGoods7 : listGoods7) {
+                        if (mapGoods7.get("goodsId").toString().equals(goodsId.toString())) {
+                            Object data = mapGoods7.get("data");
+                            if (data == null) {
+                                mapGoods7.put("data", 0);
+                            } else {
+                                mapGoods7.put("data", data.toString() + "," + 0);
+                            }
+                        }
+                    }
+                }
+            }
 
         }
-        return null;
+        Map<String,Object> returnMap = new HashMap<String,Object>();
+        returnMap.put("pv",mapPv);
+        returnMap.put("uv",mapUv);
+        returnMap.put("gmv",mapGmv);
+        returnMap.put("gmvUv",mapGmvUv);
+        returnMap.put("convertRate",mapConvertRate);
+        returnMap.put("grossMatgin",mapGrossMargin);
+        returnMap.put("avgPrice",mapAvgPrice);
+        Map<String,Object> dateMap = new HashMap<String,Object>();
+        dateMap.put("data",dates);
+        List<Map<String,Object>> dateList = new ArrayList<Map<String, Object>>();
+        dateList.add(dateMap);
+        returnMap.put("xAxis",dateList);
+        return returnMap;
     }
 
     /**

@@ -40,6 +40,17 @@ public class TimestampUtils {
     }
 
     /**
+     * 根据日期获取年月日时间字符串
+     * @param date 时间戳
+     * @return 时间字符串
+     */
+    public static String getStringDateFromDate(Date date) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString = format.format(date);
+        return dateString;
+    }
+
+    /**
      * 获取前一天的date yyyy-MM-dd
      * @return 字符串型的日期
      */

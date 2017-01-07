@@ -74,5 +74,5 @@ public interface AppDataService {
      * @param endDate 截止时间
      * @return 商品的数据
      */
-    List<Map<String,Object>> getAppGoodsInfo(Long appId,Long[] goodsIds,Long startDate, Long endDate);
+    Map<String,Object> getAppGoodsInfo(Long appId,Long[] goodsIds,Long startDate, Long endDate);
 }
