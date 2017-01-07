@@ -90,4 +90,97 @@ public interface GoodsMapper {
      * @return 插入记录数
      */
     Integer insertGoodsData(Map<String, Object> goodsData);
+
+    /**
+     * 查询所有商品Id
+     * @return goodsIds
+     */
+    List<Long> selectAllGoodsIds();
+
+    /**
+     * 所有商品的gmv总和
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 总和
+     */
+    Long selectSumGmv(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * 前十的商品的id和gmv
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 前十的商品的id和gmv
+     */
+    List<Map<String,Object>> selectGmvTopTenGoods(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * 所有商品的volume总和
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return volume总和
+     */
+    Long selectSumVolume(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * 前十的商品的id和volume
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 前十的商品的id和volume
+     */
+    List<Map<String,Object>> selectVolumeTopTenGoods(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * 查询前8个品类的gmv排名和占比
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 品类的排名占比
+     */
+    List<Map<String,Object>> selectGmvTopTenCategory(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * 查询类目下gmv前十的商品信息
+     * @param category 类目
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return gmv前十的商品信息
+     */
+    List<Map<String,Object>> selectGmvTopTenGoodsByCategory(@Param("categoryId") Integer category,
+                                                            @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * 类目下所有商品的gmv总和
+     * @param category 类目
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 总和
+     */
+    Long selectSumGmvByCategory(@Param("categoryId") Integer category,
+                                @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * 查询前8个品类的volume排名和占比
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 品类的排名占比
+     */
+    List<Map<String,Object>> selectVolumeTopTenCategory(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * 查询类目下volume前十的商品信息
+     * @param category 类目
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return volume前十的商品信息
+     */
+    List<Map<String,Object>> selectVolumeTopTenGoodsByCategory(@Param("categoryId") Integer category,
+                                                               @Param("startTime") String startTime, @Param("endTime") String endTime);
+    /**
+     * 类目下所有商品的volume总和
+     * @param category 类目
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 总和
+     */
+    Long selectSumVolumeByCategory(@Param("categoryId") Integer category,
+                                   @Param("startTime") String startTime, @Param("endTime") String endTime);
 }

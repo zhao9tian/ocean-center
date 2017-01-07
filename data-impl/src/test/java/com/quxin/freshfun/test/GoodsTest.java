@@ -39,21 +39,34 @@ public class GoodsTest extends TestBase {
 //        System.out.println(goodsService.queryGoodsUVByGoodsId(55L, 0L, 111111111110L));
 //        System.out.println(goodsService.queryGoodsCVRByGoodsId(2071531L, 0L, 111111111110L));
 //        System.out.println(goodsService.querySevenRPRByGoodsId(2071531L, 0L, 111111111110L));
-//          System.out.println(goodsDataService.saveGoodsIndicator(55L));//2071531L
+        Long now = System.currentTimeMillis();
+          System.out.println(goodsDataService.saveGoodsIndicator());//2071531L
+        System.out.println(System.currentTimeMillis() - now);
 //        System.out.println(goodsDataService.getGoodsCostByGoodsId(55L));//2071531L
 //        System.out.println(goodsDataService.getPVAndUVByGoodsIdAndAppId(2071531L , 900435L));//2071531L
-        Long[] ids = new Long[5];
-        ids[0] = 2L;
-        ids[1] = 56L;
-        ids[2] = 57L;
-        ids[3] = 3L;
-        ids[4] = 59L;
-        System.out.println(goodsDataService.getGoodsNamesByGoodsIds(ids));
+//        Long[] ids = new Long[5];
+//        ids[0] = 2L;
+//        ids[1] = 56L;
+//        ids[2] = 57L;
+//        ids[3] = 3L;
+//        ids[4] = 59L;
+//        System.out.println(goodsDataService.getGoodsNamesByGoodsIds(ids));
+    }
+
+
+    @org.junit.Test
+    public void queryGoods() {
+
+//        System.out.println(goodsService.getGoodsGMVTopTen(1483718400L ,1483718400L));
+//        System.out.println(goodsService.getGoodsVolumeTopTen(1483632000L ,1483632000L));
+        System.out.println(goodsService.getCategoryGmvTopTen(1483718400L ,1483718400L));
+//        System.out.println(goodsService.getGoodsGmvTopTenByCategory(108 ,1483632000L ,1483632000L));
+//        System.out.println(goodsService.getCategoryVolumeTopTen(1483632000L ,1483632000L));
+//        System.out.println(goodsService.getGoodsVolumeTopTenByCategory(106 ,1483632000L ,1483632000L));
     }
 
     public static void main(String[] args) {
 
-//        System.out.println(TimestampUtils.getStartTimestamp());
         Integer aa = 56 ;
         Integer bb = 66 ;
 
