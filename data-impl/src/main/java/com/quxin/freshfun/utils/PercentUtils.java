@@ -7,7 +7,7 @@ package com.quxin.freshfun.utils;
 public class PercentUtils {
 
     public static Integer getPercent(Integer top , Integer bottom){
-        if(0 == bottom){
+        if(bottom <= 0 || top <= 0){
             return 0 ;
         }else{
             return Math.round((float) top/bottom *10000);
