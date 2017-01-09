@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.quxin.freshfun.dao.OrderMapper">
+
+	<resultMap id="ResultDataMap" type="com.quxin.freshfun.api.bean.order.OrderDataPOJO">
+		<result column="orderNum" jdbcType="INTEGER" property="orderNum"/>
+		<result column="orderPrice" jdbcType="BIGINT" property="orderPrice"/>
+		<result column="orderDate" jdbcType="VARCHAR" property="orderDate"/>
+		<result column="user_id" jdbcType="BIGINT" property="userId"/>
+	</resultMap>
+
+	<resultMap id="ResultOrderMap" type="com.quxin.freshfun.api.bean.order.TimeDataPOJO">
+		<id column="id" jdbcType="BIGINT" property="id"/>
+		<result column="gmv" jdbcType="BIGINT" property="gmv"/>
+		<result column="gmv_uv" jdbcType="INTEGER" property="gmvUv"/>
+		<result column="order_num" jdbcType="INTEGER" property="orderNum"/>
+		<result column="seven_rpr" jdbcType="INTEGER" property="sevenRpr"/>
+		<result column="thirty_rpr" jdbcType="INTEGER" property="thirtyRpr"/>
+		<result column="created" jdbcType="VARCHAR" property="created"/>
+	</resultMap>
+	<!--查询统计数据-->
+	<select id="selectOrderLatitude" parameterType="java.util.Map" resultMap="ResultOrderMap">
+		select id,gmv,gmv_uv,order_num,seven_rpr,thirty_rpr,created
+		from time_data
+		where created
+		between FROM_UNIXTIME(#{beginTime}, '%Y-%m-%d')
+		and FROM_UNIXTIME(#{endTime}, '%Y-%m-%d');
+	</select>
+
+	<!--查询指定日期订单数据-->
+	<select id="selectOrderData" parameterType="java.util.Map" resultMap="ResultDataMap">
+		select count(*) as `orderNum`,
+			   sum(`actual_price`) as `orderPrice`,
+			   FROM_UNIXTIME(create_date, '%Y-%m-%d') as `orderDate`
+			   from order_details
+			   where create_date
+			   between #{beginTime} and #{endTime}
+			   and order_status <![CDATA[>=]]> 30
+			   and is_deleted = 0
+	</select>
+	<!--查询七天购买用户-->
+	<select id="selectSevenRpr" parameterType="java.util.Map" resultMap="ResultDataMap">
+		select user_id from order_details where order_status <![CDATA[>=]]> 30 and is_deleted = 0 and create_date between #{beginTime} and #{endTime} group by user_id
+	</select>
+	<!--查询复购用户-->
+	<select id="selectRePurchaseUser" parameterType="java.util.List" resultMap="ResultDataMap">
+		select count(*) as num,user_id
+		from order_details
+		where user_id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item.userId}
+		</foreach>
+		and order_status <![CDATA[>=]]> 30
+		and is_deleted = 0
+		group by user_id
+		having num <![CDATA[>]]> 1
+	</select>
+    <!--添加次日的统计数据-->
+    <insert id="insertTimeLatitude" parameterType="com.quxin.freshfun.api.bean.order.TimeDataPOJO" >
+        insert into time_data (id,gmv,gmv_uv,order_num,seven_rpr,thirty_rpr,created)
+        values (#{id},#{gmv},#{gmvUv},#{orderNum},#{sevenRpr},#{thirtyRpr},#{created})
+    </insert>
+
+</mapper>

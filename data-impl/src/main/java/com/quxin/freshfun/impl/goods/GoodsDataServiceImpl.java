@@ -84,12 +84,12 @@ public class GoodsDataServiceImpl implements GoodsDataService {
             List<Long> todayOrderedUsers = goodsMapper.selectOrderedUsersByGoodsId(goodsId, startTime, endTime);
             Integer todayOrderedNum = todayOrderedUsers.size();
             Integer convertRate = 0;
+            //gmv/uv  查看当天用户平均在商城支付了多少钱
             Integer gmvUv = 0;
             if (goodsUV != 0) {
                 convertRate = PercentUtils.getPercent(todayOrderedNum, goodsUV);
                 gmvUv = gmv / goodsUV;
             }
-            //gmv/uv  查看当天用户平均在商城支付了多少钱
             Map<String, Object> goodsData = Maps.newHashMap();
             goodsData.put("goodsId", goodsId);
             goodsData.put("date", TimestampUtils.getDateFromTimestamp());
