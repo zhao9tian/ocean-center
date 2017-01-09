@@ -2,6 +2,7 @@ package com.quxin.freshfun.task;
 
 import com.quxin.freshfun.api.app.AppTaskService;
 import com.quxin.freshfun.api.goods.GoodsDataService;
+import com.quxin.freshfun.api.order.OrderDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,16 +20,24 @@ public class Timer {
     private GoodsDataService goodsDataService;
     @Autowired
     private AppTaskService appTaskService;
+    @Autowired
+    private OrderDataService orderDataService;
 
 //    @Scheduled(cron="0/10 * * * * ? ")   //ss : mm : HH
     @Scheduled(cron="0 0 3 * * ? ")   //ss : mm : HH
     public void autoImportGoodsData() {
         System.out.println(new Date()+"开始跑商品数据");
         goodsDataService.saveGoodsIndicator();
+    }
+
+    @Scheduled(cron="0 0 3 * * ? ")
+    public void autoImportAppLatitudeData() {
         System.out.println(new Date()+"开始统计公众号&商品数据");
         appTaskService.runAppTask(1);
     }
 
-
-
+    @Scheduled(cron="0 0 3 * * ? ")
+    public void autoImportDateLatitudeData() {
+        orderDataService.addOrderLatitude();
+    }
 }

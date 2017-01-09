@@ -2,6 +2,7 @@ package com.quxin.freshfun.impl.order;
 
 import com.quxin.freshfun.api.bean.order.OrderDataPOJO;
 import com.quxin.freshfun.api.bean.order.TimeDataPOJO;
+import com.quxin.freshfun.api.order.OrderDataService;
 import com.quxin.freshfun.api.order.OrderService;
 import com.quxin.freshfun.dao.GoodsMapper;
 import com.quxin.freshfun.dao.OrderMapper;
@@ -20,7 +21,7 @@ import java.util.Map;
  * Created by fanyanlin on 2016/12/29.
  */
 @Service("orderService")
-public class OrderServiceImpl implements OrderService {
+public class OrderServiceImpl implements OrderService,OrderDataService {
     @Autowired
     private OrderMapper orderMapper;
     @Autowired
