@@ -28,7 +28,7 @@ public class AppTaskServiceImpl implements AppTaskService{
     public void runAppTask(Integer day) {
         //获取当天开始时间作为前一天的结束时间
         Long endDate = TimestampUtils.getStartTimestamp()-86400*(day-1);
-        Long startDate = endDate-86400*day;
+        Long startDate = endDate-86400;
         DynamicDataSourceHolder.setDataSource(DynamicDataSource.ONLINE_DATA);
         List<Map<String,Object>> orderList = appDataMapper.selectOrderInfo(startDate,endDate);
         for(Map<String,Object> map : orderList){
