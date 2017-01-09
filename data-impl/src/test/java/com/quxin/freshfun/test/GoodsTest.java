@@ -48,16 +48,16 @@ public class GoodsTest extends TestBase {
     @org.junit.Test
     public void queryGoods() {
 
-//        System.out.println(goodsService.getGoodsGMVTopTen(1483718400L ,1483718400L));
-//        System.out.println(goodsService.getGoodsVolumeTopTen(1483632000L ,1483632000L));
-//        System.out.println(goodsService.getCategoryGmvTopTen(1483718400L ,1483718400L));
-//        System.out.println(goodsService.getGoodsGmvTopTenByCategory(108 ,1483632000L ,1483632000L));
-//        System.out.println(goodsService.getCategoryVolumeTopTen(1483632000L ,1483632000L));
-//        System.out.println(goodsService.getGoodsVolumeTopTenByCategory(106 ,148363200L0L ,1483632000L));
-        List<Long> ids = new ArrayList<Long>();
-        ids.add(55L);
-        ids.add(2071659L);
-        System.out.println(goodsService.getGoodsIndicator(ids ,1483622000L ,1483891200L ));
+//        System.out.println(goodsService.getGoodsGMVTopTen(1483459200L ,1484546600L));
+//        System.out.println(goodsService.getGoodsVolumeTopTen(1483459200L ,1484546600L));
+//        System.out.println(goodsService.getCategoryGmvTopTen(1483459200L ,1484546600L));
+//        System.out.println(goodsService.getGoodsGmvTopTenByCategory(108 ,1483459200L ,1484546600L));
+//        System.out.println(goodsService.getCategoryVolumeTopTen(1483459200L ,1484546600L));
+        System.out.println(goodsService.getGoodsVolumeTopTenByCategory(106 ,1483459200L ,1484546600L));
+//        List<Long> ids = new ArrayList<Long>();
+//        ids.add(55L);
+//        ids.add(2071659L);
+//        System.out.println(goodsService.getGoodsIndicator(ids ,1483622000L ,1483891200L ));
     }
 
     public static void main(String[] args) {
