@@ -30,7 +30,7 @@ public interface GoodsDataService {
      * @param appId appId
      * @return pv uv   key :  pv  uv
      */
-    Map<String , Object> getPVAndUVByGoodsIdAndAppId(Long goodsId , Long appId);
+    Map<String , Object> getPVAndUVByGoodsIdAndAppId(Long goodsId , Long appId ,Long start,Long end);
 
     /**
      * 根据商品Id查询商品名称

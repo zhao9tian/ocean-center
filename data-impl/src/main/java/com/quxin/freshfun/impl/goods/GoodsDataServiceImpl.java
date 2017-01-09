@@ -123,12 +123,12 @@ public class GoodsDataServiceImpl implements GoodsDataService {
     }
 
     @Override
-    public Map<String, Object> getPVAndUVByGoodsIdAndAppId(Long goodsId, Long appId) {
+    public Map<String, Object> getPVAndUVByGoodsIdAndAppId(Long goodsId, Long appId,Long start,Long end) {
         if (goodsId != null && appId != null) {
-            Long endTime = TimestampUtils.getStartTimestamp();
-            Long startTime = endTime - 86400;
+            //Long endTime = TimestampUtils.getStartTimestamp();
+            //Long startTime = endTime - 86400;
             DynamicDataSourceHolder.setDataSource(DynamicDataSource.PTP_DATA);
-            Integer pv = goodsMapper.selectGoodsPVByGoodsIdAndAppId(goodsId, appId, startTime, endTime);
+            Integer pv = goodsMapper.selectGoodsPVByGoodsIdAndAppId(goodsId, appId, start, end);
             Integer uv = Math.round((float) pv / 2);
             Map<String, Object> result = Maps.newHashMap();
             result.put("pv", pv);

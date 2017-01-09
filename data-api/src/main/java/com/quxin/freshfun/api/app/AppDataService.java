@@ -9,10 +9,13 @@ import java.util.Map;
  * Created by ziming on 2017/1/5.
  */
 public interface AppDataService {
+
     /**
-     * 定时任务
+     * 根据appId获取appName
+     * @param ids appIds
+     * @return key: appId , value: appNames
      */
-    void runAppTask();
+    Map<Long,Object> getAppNamesByIds(Long[] ids);
 
     /**
      * 查询统计时间段内某个公众号下的商品成交额分布数据

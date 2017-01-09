@@ -10,6 +10,8 @@ import com.quxin.freshfun.db.DynamicDataSource;
 import com.quxin.freshfun.db.DynamicDataSourceHolder;
 import com.quxin.freshfun.utils.ReckonRateUtil;
 import com.quxin.freshfun.utils.TimestampUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,45 +31,26 @@ public class AppDataServiceImpl implements AppDataService{
     @Autowired
     private GoodsDataService goodsDataService;
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+
+    /**
+     * 根据appId获取appName
+     *
+     * @param ids appIds
+     * @return key: appId , value: appNames
+     */
     @Override
-    public void runAppTask() {
-        //获取当天开始时间作为前一天的结束时间
-        Long endDate = TimestampUtils.getStartTimestamp();
-        Long startDate = endDate-86400;
-        DynamicDataSourceHolder.setDataSource(DynamicDataSource.ONLINE_DATA);
-        List<Map<String,Object>> orderList = appDataMapper.selectOrderInfo(startDate,endDate);
-        for(Map<String,Object> map : orderList){
-            //计算平均成交价，统计时间段内商品的成交价总和/统计时间段内商品成交数
-            Integer volume = Integer.parseInt(map.get("volume").toString());
-            Integer gmv = Integer.parseInt(map.get("gmv").toString());
-            Long appId = Long.parseLong(map.get("appId").toString());
-            Long goodsId = Long.parseLong(map.get("goodsId").toString());
-            //平均成交价
-            map.put("avgPrice",gmv/volume);
-            //获取pv,uv
-            Map<String,Object> pvuv =  goodsDataService.getPVAndUVByGoodsIdAndAppId(goodsId,appId==888888l?0:appId);
-            Integer pv = Integer.parseInt(pvuv.get("pv").toString());
-            map.put("pv",pv);
-            Integer uv = Integer.parseInt(pvuv.get("uv").toString());
-            map.put("uv",uv);
-            //浏览转化率
-            if(uv==0){
-                map.put("gmvUv",0);
-            }else{
-                map.put("gmvUv",gmv/uv);
-            }
-            //计算转化率
-            Integer userCount = Integer.parseInt(map.get("userCount").toString());
-            map.put("convertRate", ReckonRateUtil.getRate(userCount,uv));
-            //计算毛利率
-            Integer costPrice = goodsDataService.getGoodsCostByGoodsId(goodsId);
-            map.put("grossMargin",ReckonRateUtil.getRate(gmv-costPrice*volume,gmv));
-            //保存日期
-            map.put("date",TimestampUtils.getStringDateFromLong(System.currentTimeMillis()/1000-86400));
+    public Map<Long, Object> getAppNamesByIds(Long[] ids) {
+        if(ids==null||ids.length<=0){
+            return null;
         }
-        DynamicDataSourceHolder.setDataSource(DynamicDataSource.OCEAN_DATA);
-        Integer result = appDataMapper.insertAppDataInfo(orderList);
-        System.out.println("插入数据行数："+result);
+        List<Map<String,Object>> list = appDataMapper.selectAppNamesByIds(ids);
+        Map<Long, Object> map = new HashMap<>();
+        for( Map<String, Object> mapApp : list){
+            map.put(Long.parseLong(mapApp.get("appId").toString()),mapApp.get("appName"));
+        }
+        return map;
     }
 
     /**
@@ -587,6 +570,9 @@ public class AppDataServiceImpl implements AppDataService{
      * 设置公众号名称
      */
     private List<AppOutParam> setAppName(List<AppOutParam> list){
+        if(list==null||list.size()==0){
+            return null;
+        }
         Long[] ids = new Long[list.size()];
         for(int i=0;i<list.size();i++){
             ids[i] = list.get(i).getAppId();

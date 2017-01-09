@@ -35,7 +35,7 @@
 
     <!--查询商品类目和成交价-->
     <select id="selectCategoryAndCostByGoodsId" resultType="java.util.HashMap">
-		select category2 as category, cost as goodsCost from goods_base where id = #{goodsId} and is_deleted = 0
+		select category2 as category, cost as goodsCost from goods_base where id = #{goodsId}
 	</select>
 
 
