@@ -74,8 +74,8 @@
 
     <!--查询指定时间段内商品gmv前十的信息-->
     <select id="selectGmvTopTenGoods" resultType="java.util.HashMap">
-		select goods_id as goodsId , gmv from goods_data where `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
-				and gmv > 0 order by gmv desc limit 10
+        select  goods_id as goodsId , sum(gmv) as gmv from goods_data where `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
+        group by goods_id having sum(gmv) > 0 order by sum(gmv) desc limit 10
 	</select>
 
     <!--查询指定时间段内的商品volume总和-->
@@ -85,14 +85,14 @@
 
     <!--查询指定时间段内商品volume前十的信息-->
     <select id="selectVolumeTopTenGoods" resultType="java.util.HashMap">
-		select goods_id as goodsId , volume from goods_data where `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
-		and volume > 0 order by volume desc limit 10
+		select goods_id as goodsId , sum(volume) as volume from goods_data where `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
+		group by goods_id having sum(volume) > 0 order by sum(volume) desc limit 10
 	</select>
 
     <!--查询品类的gmv占比和排名-->
     <select id="selectGmvTopTenCategory" resultType="java.util.HashMap">
         select sum(gmv) as gmv, category as categoryId from goods_data where `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
-          group by category having sum(gmv) > 0 order by sum(gmv) desc
+          group by category  order by sum(gmv) desc
 	</select>
 
 
@@ -103,22 +103,22 @@
 
     <!--查询指定时间段内某个类目下商品gmv前十的信息-->
     <select id="selectGmvTopTenGoodsByCategory" resultType="java.util.HashMap">
-        select goods_id as goodsId , gmv from goods_data where category = #{categoryId} and `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
-        and gmv > 0  order by gmv desc limit 10
+        select goods_id as goodsId , sum(gmv) as gmv from goods_data where category = #{categoryId} and `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
+        group by goods_id having sum(gmv) > 0 order by sum(gmv) desc limit 10
     </select>
 
 
     <!--查询品类的volume占比和排名-->
     <select id="selectVolumeTopTenCategory" resultType="java.util.HashMap">
         select sum(volume) as volume, category as categoryId from goods_data where `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
-          group by category having sum(volume) > 0 order by sum(volume) desc
+          group by category  order by sum(volume) desc
     </select>
 
 
     <!--查询指定时间段内某个类目下商品前十的信息-->
     <select id="selectVolumeTopTenGoodsByCategory" resultType="java.util.HashMap">
-        select goods_id as goodsId , volume from goods_data where category = #{categoryId} and `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
-        and volume > 0  order by volume desc limit 10
+        select goods_id as goodsId , sum(volume) as volume from goods_data where category = #{categoryId} and `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
+        group by goods_id having sum(volume) > 0 order by sum(volume) desc limit 10
     </select>
 
 
