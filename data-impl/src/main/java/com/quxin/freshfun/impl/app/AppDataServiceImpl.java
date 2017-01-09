@@ -45,6 +45,7 @@ public class AppDataServiceImpl implements AppDataService{
         if(ids==null||ids.length<=0){
             return null;
         }
+        DynamicDataSourceHolder.setDataSource(DynamicDataSource.ONLINE_DATA);
         List<Map<String,Object>> list = appDataMapper.selectAppNamesByIds(ids);
         Map<Long, Object> map = new HashMap<>();
         for( Map<String, Object> mapApp : list){
