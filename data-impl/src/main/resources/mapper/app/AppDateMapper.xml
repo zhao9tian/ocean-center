@@ -58,7 +58,7 @@
     <!--获取商品下公众号成交量数据-->
     <select id="selectGoodsAppTv" resultType="com.quxin.freshfun.api.bean.app.AppOutParam">
         select app_id as appId ,goods_id as goodsId,sum(volume) as volume from app_data where goods_id=#{goodsId} and date <![CDATA[>=]]> #{startDate}
-        and date <![CDATA[<=]]> #{endDate} group by goodsId order by volume DESC limit 10
+        and date <![CDATA[<=]]> #{endDate} group by appId order by volume DESC limit 10
     </select>
     <!--获取商品下公众号总成交量数据-->
     <select id="selectAllGoodsAppTv" resultType="java.lang.Integer">
