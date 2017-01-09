@@ -3,6 +3,7 @@ package com.quxin.freshfun.utils;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * 时间戳工具类
@@ -73,6 +74,28 @@ public class TimestampUtils {
     public static String getDateFromTimestamp(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(new Date(System.currentTimeMillis()-86400000));
+    }
+    /**
+     * 获取昨天的开始时间
+     * @param date 当前开始时间
+     * @return 昨天时间
+     */
+    public static Long getYesterdayStartTime(long date){
+        return date - 86400;
+    }
+
+    /**
+     * 获取指定时间后的天数
+     * @param date 传入时间戳
+     * @param day 需要减去的天数
+     * @return 减去天后时间戳
+     */
+    public static long getPastDate(long date,int day){
+        Calendar calendar = Calendar.getInstance();
+        Date dateTime = new Date((date*1000));
+        calendar.setTime(dateTime);
+        calendar.add(Calendar.DATE, -day);
+        return calendar.getTime().getTime()/1000;
     }
 
 }

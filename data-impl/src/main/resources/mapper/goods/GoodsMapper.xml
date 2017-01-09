@@ -8,6 +8,20 @@
 			and	created <![CDATA[>=]]> #{startTime} and created <![CDATA[<]]> #{endTime}
 	</select>
 
+	<!--查询总pv-->
+	<select id="selectTotalPV" resultType="java.lang.Integer">
+		select count(*) from ptp where key_event = 'e101900'
+			and	created <![CDATA[>=]]> #{startTime} and created <![CDATA[<]]> #{endTime}
+	</select>
+
+    <select id="selectGoodsNameById" parameterType="java.util.Arrays"
+            resultType="com.quxin.freshfun.api.bean.GoodsPOJO">
+        select id as goodsId,title as title from goods_base where id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
     <!-- 根据商品id查询7天下单用户-->
     <select id="selectOrderedUsersByGoodsId" resultType="long">
 		select distinct user_id from order_details where is_deleted = 0 and

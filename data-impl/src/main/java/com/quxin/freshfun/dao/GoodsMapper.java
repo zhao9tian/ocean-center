@@ -21,6 +21,13 @@ public interface GoodsMapper {
      */
     Integer selectGoodsPVByGoodsId(@Param("goodsId") Long goodsId, @Param("startTime") Long startTime, @Param("endTime") Long endTime);
 
+    /**
+     * 查询总pv
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 总pv
+     */
+    Integer selectTotalPV(@Param("startTime") Long startTime, @Param("endTime") Long endTime);
 
     /**
      * 查询下单的用户数
