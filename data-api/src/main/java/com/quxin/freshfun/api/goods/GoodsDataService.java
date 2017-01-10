@@ -26,11 +26,9 @@ public interface GoodsDataService {
 
     /**
      * 根据商品id和appId查询前一天的pv和uv
-     * @param goodsId 商品Id
-     * @param appId appId
-     * @return pv uv   key :  pv  uv
+     * @return 结果
      */
-    Map<String , Object> getPVAndUVByGoodsIdAndAppId(Long goodsId , Long appId ,Long start,Long end);
+    List<Map<String , Object>> getPVAndUVByGoodsIdAndAppId(Long start,Long end);
 
     /**
      * 根据商品Id查询商品名称

@@ -123,21 +123,9 @@ public class GoodsDataServiceImpl implements GoodsDataService {
     }
 
     @Override
-    public Map<String, Object> getPVAndUVByGoodsIdAndAppId(Long goodsId, Long appId,Long start,Long end) {
-        if (goodsId != null && appId != null) {
-            //Long endTime = TimestampUtils.getStartTimestamp();
-            //Long startTime = endTime - 86400;
-            DynamicDataSourceHolder.setDataSource(DynamicDataSource.PTP_DATA);
-            Integer pv = goodsMapper.selectGoodsPVByGoodsIdAndAppId(goodsId, appId, start, end);
-            Integer uv = Math.round((float) pv / 2);
-            Map<String, Object> result = Maps.newHashMap();
-            result.put("pv", pv);
-            result.put("uv", uv);
-            return result;
-        } else {
-            logger.error("商品id或者appId为空");
-            return null;
-        }
+    public List<Map<String, Object>> getPVAndUVByGoodsIdAndAppId(Long start, Long end) {
+        DynamicDataSourceHolder.setDataSource(DynamicDataSource.PTP_DATA);
+        return goodsMapper.selectPvAndUv(start, end);
     }
 
     @Override

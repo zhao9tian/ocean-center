@@ -40,7 +40,8 @@ public class AppTaskServiceImpl implements AppTaskService{
             //平均成交价
             map.put("avgPrice",gmv/volume);
             //获取pv,uv
-            Map<String,Object> pvuv =  goodsDataService.getPVAndUVByGoodsIdAndAppId(goodsId,appId==888888l?0:appId,startDate,endDate);
+//            Map<String,Object> pvuv =  goodsDataService.getPVAndUVByGoodsIdAndAppId(goodsId,appId==888888l?0:appId,startDate,endDate);
+            Map<String,Object> pvuv =  null;
             Integer pv = Integer.parseInt(pvuv.get("pv").toString());
             map.put("pv",pv);
             Integer uv = Integer.parseInt(pvuv.get("uv").toString());

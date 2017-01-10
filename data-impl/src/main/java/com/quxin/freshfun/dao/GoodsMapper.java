@@ -69,17 +69,6 @@ public interface GoodsMapper {
      */
     Map<String, Long> selectCategoryAndCostByGoodsId(@Param("goodsId") Long goodsId);
 
-    /**
-     * 查询app下面的商品前一天的pv
-     *
-     * @param goodsId   商品id
-     * @param appId     appId
-     * @param startTime 开始时间
-     * @param endTime   结束时间
-     * @return pv
-     */
-    Integer selectGoodsPVByGoodsIdAndAppId(@Param("goodsId") Long goodsId, @Param("appId") Long appId,
-                                           @Param("startTime") Long startTime, @Param("endTime") Long endTime);
 
     /**
      * 根据商品Ids批量查询商品名称
@@ -210,4 +199,12 @@ public interface GoodsMapper {
      * @return 返回结果
      */
     List<Map<String,Object>> selectGoodsIndicator(@Param("goodsIds") List<Long> goodsIds, @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * 查询一段时间内所有公众号下,所有商品的pv
+     * @param start 开始时间
+     * @param end 结束时间
+     * @return 列表
+     */
+    List<Map<String,Object>> selectPvAndUv(@Param("startTime") Long start, @Param("endTime") Long end);
 }

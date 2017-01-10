@@ -53,11 +53,11 @@
 	</select>
 
 
-    <!--查询商品类目和成交价-->
-    <select id="selectGoodsPVByGoodsIdAndAppId" resultType="int">
-		select count(*) from ptp where  goods_id = #{goodsId} and app_id = #{appId}  and key_event = 'e101900'
-			and	created <![CDATA[>=]]> #{startTime} and created <![CDATA[<]]> #{endTime}
-	</select>
+
+    <select id="selectPvAndUv" resultType="java.util.HashMap">
+        select count(*) as pv , app_id as appId , goods_id as goodsId from ptp where key_event ='e101900' and
+        created <![CDATA[>=]]> #{startTime} and created <![CDATA[<]]> #{endTime} group by app_id , goods_id
+    </select>
 
 
     <!--查询商品名称-->
