@@ -23,8 +23,9 @@ public interface GoodsMapper {
 
     /**
      * 查询总pv
+     *
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return 总pv
      */
     Integer selectTotalPV(@Param("startTime") Long startTime, @Param("endTime") Long endTime);
@@ -43,12 +44,20 @@ public interface GoodsMapper {
      * 查询重复购买的用户数
      *
      * @param goodsId   商品Id
-     * @param startTime 开始时间
+     * @param users     用户
      * @param endTime   结束时间
      * @return 复购id
      */
-    List<Long> selectRepeatedUsersByGoodsId(@Param("goodsId") Long goodsId, @Param("users") List<Long> users, @Param("startTime") Long startTime,
-                                            @Param("endTime") Long endTime);
+    List<Long> selectRepeatedUsersByGoodsId(@Param("goodsId") Long goodsId, @Param("users") List<Long> users, @Param("endTime") Long endTime);
+
+    /**
+     * 查询复购用户信息
+     * @param goodsId 商品Id
+     * @param users 复购用户id
+     * @param endTime 结束时间
+     * @return 用户信息
+     */
+    List<Map<String,Object>> selectUserInfoByGoodsId(@Param("goodsId") Long goodsId, @Param("users") List<Long> users, @Param("endTime") Long endTime);
 
 
     /**
@@ -193,18 +202,22 @@ public interface GoodsMapper {
 
     /**
      * 商品ids
-     * @param goodsIds 商品
+     *
+     * @param goodsIds  商品
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return 返回结果
      */
-    List<Map<String,Object>> selectGoodsIndicator(@Param("goodsIds") List<Long> goodsIds, @Param("startTime") String startTime, @Param("endTime") String endTime);
+    List<Map<String, Object>> selectGoodsIndicator(@Param("goodsIds") List<Long> goodsIds, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
     /**
      * 查询一段时间内所有公众号下,所有商品的pv
+     *
      * @param start 开始时间
-     * @param end 结束时间
+     * @param end   结束时间
      * @return 列表
      */
-    List<Map<String,Object>> selectPvAndUv(@Param("startTime") Long start, @Param("endTime") Long end);
+    List<Map<String, Object>> selectPvAndUv(@Param("startTime") Long start, @Param("endTime") Long end);
+
+
 }

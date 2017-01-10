@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 商品单元测试
@@ -52,11 +54,12 @@ public class GoodsTest extends TestBase {
 //        System.out.println(goodsService.getGoodsGmvTopTenByCategory(108 ,1483718400L ,1483804799L));
 //        System.out.println(goodsService.getCategoryVolumeTopTen(1483718400L ,1483804799L));
 //        System.out.println(goodsService.getGoodsVolumeTopTenByCategory(106 ,1483718400L ,1483804799L));
-//        List<Long> ids = new ArrayList<Long>();
-//        ids.add(55L);
+        List<Long> ids = new ArrayList<Long>();
+        ids.add(55L);
+//        ids.add(52L);
 //        ids.add(2071659L);
-//        System.out.println(goodsService.getGoodsIndicator(ids ,1483622000L ,1483891200L ));
-        System.out.println(goodsDataService.getPVAndUVByGoodsIdAndAppId(1484891200L ,1484977600L));
+        System.out.println(goodsService.getGoodsIndicator(ids ,1483622000L ,1483891200L ));
+//        System.out.println(goodsDataService.getPVAndUVByGoodsIdAndAppId(1484891200L ,1484977600L));
     }
 
     public static void main(String[] args) {

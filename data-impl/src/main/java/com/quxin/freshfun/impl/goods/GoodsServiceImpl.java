@@ -195,6 +195,24 @@ public class GoodsServiceImpl implements GoodsService {
                 data.put("data", dates);
                 xAxisValue.add(data);
                 result.put("xAxis", xAxisValue);
+                Long[] goodsIdsArr = new Long[goodsIds.size()];
+                int i = 0;
+                for (Long goodsId : goodsIds) {
+                    goodsIdsArr[i] = goodsId;
+                    i++;
+                }
+                Map<Long, Object> goodsNames = goodsDataService.getGoodsNamesByGoodsIds(goodsIdsArr);
+                for(Long goodsId : goodsIds){
+                    if(goodsNames.get(goodsId) == null){
+                        Map<String, Object>  map = Maps.newHashMap();
+                        map.put("code",1004);
+                        map.put("msg","id为"+goodsId+"的商品不存在");
+                        Map<String, Object>  resultMap = Maps.newHashMap();
+                        resultMap.put("status",map);
+                        return resultMap;
+                    }
+                }
+
                 result.put("pv", getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, "pv"));
                 result.put("uv", getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, "uv"));
                 result.put("avgPrice", getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, "avgPrice"));

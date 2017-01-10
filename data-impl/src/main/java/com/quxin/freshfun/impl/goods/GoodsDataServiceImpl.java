@@ -13,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 商品指标
@@ -60,25 +62,15 @@ public class GoodsDataServiceImpl implements GoodsDataService {
             }
             //商品7天下单用户数,复购的人数
             List<Long> sevenOrderedUsers = goodsMapper.selectOrderedUsersByGoodsId(goodsId, endTime - 86400 * 7, endTime);
-            Integer sevenOrderedNum = sevenOrderedUsers.size();
             Integer sevenRpr = 0;
             if (sevenOrderedUsers.size() > 0) {
-                List<Long> repeatedUsers = goodsMapper.selectRepeatedUsersByGoodsId(goodsId, sevenOrderedUsers, endTime - 86400 * 7, endTime);
-                if (repeatedUsers.size() > 0) {
-                    Integer repeatedNum = repeatedUsers.size();
-                    sevenRpr = PercentUtils.getPercent(repeatedNum, sevenOrderedNum);
-                }
+                sevenRpr = getRpr(goodsId, sevenOrderedUsers, endTime);
             }
             //商品30天下单用户数,复购的人数
             List<Long> monthOrderedUsers = goodsMapper.selectOrderedUsersByGoodsId(goodsId, endTime - 86400 * 30, endTime);
-            Integer monthOrderedNum = monthOrderedUsers.size();
             Integer monthRpr = 0;
             if (monthOrderedUsers.size() > 0) {
-                List<Long> monthRepeatedUsers = goodsMapper.selectRepeatedUsersByGoodsId(goodsId, monthOrderedUsers, endTime - 86400 * 30, endTime);
-                if (monthRepeatedUsers.size() > 0) {
-                    Integer monthRepeatedNum = monthRepeatedUsers.size();
-                    monthRpr = PercentUtils.getPercent(monthRepeatedNum, monthOrderedNum);
-                }
+                monthRpr = getRpr(goodsId, monthOrderedUsers, endTime);
             }
             //转化率 = 当天下单数/UV  有多少用户下单
             List<Long> todayOrderedUsers = goodsMapper.selectOrderedUsersByGoodsId(goodsId, startTime, endTime);
@@ -109,6 +101,45 @@ public class GoodsDataServiceImpl implements GoodsDataService {
         }
         return true;
     }
+
+    /**
+     * 获取复购率
+     *
+     * @param goodsId 商品id
+     * @param userIds 购买用户id
+     * @param endTime 结束时间
+     * @return 返回*日复购率
+     */
+    private Integer getRpr(Long goodsId, List<Long> userIds, Long endTime) {
+        if (userIds.size() > 0) {
+            List<Long> repeatedUsers = goodsMapper.selectRepeatedUsersByGoodsId(goodsId, userIds, endTime);
+            if (repeatedUsers.size() > 0) {
+                //查询用户复购信息
+                List<Map<String, Object>> userInfo = goodsMapper.selectUserInfoByGoodsId(goodsId, repeatedUsers, endTime);
+                Set<Long> repeatUserIds = new HashSet<>();//所有的id
+                Set<Long> repeatedUserIds = new HashSet<>();//去重后的用户id
+                for (Map<String, Object> map : userInfo) {
+                    repeatUserIds.add(Long.parseLong(map.get("userId").toString()));
+                }
+                for (Long userId : repeatUserIds) {
+                    int i = 0;
+                    for (Map<String, Object> map : userInfo) {
+                        if (userId.equals(Long.parseLong(map.get("userId").toString()))) {
+                            i++;
+                            break;
+                        }
+                    }
+                    if (i > 0) {
+                        repeatedUserIds.add(userId);
+                    }
+                }
+                Integer repeatedNum = repeatedUserIds.size();
+                return PercentUtils.getPercent(repeatedNum, userIds.size());
+            }
+        }
+        return 0;
+    }
+
 
     @Override
     public Integer getGoodsCostByGoodsId(Long goodsId) {
