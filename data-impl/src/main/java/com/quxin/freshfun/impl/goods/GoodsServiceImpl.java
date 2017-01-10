@@ -7,6 +7,7 @@ import com.quxin.freshfun.dao.GoodsMapper;
 import com.quxin.freshfun.db.DynamicDataSource;
 import com.quxin.freshfun.db.DynamicDataSourceHolder;
 import com.quxin.freshfun.utils.CategoryUtils;
+import com.quxin.freshfun.utils.MoneyFormatUtils;
 import com.quxin.freshfun.utils.TimestampUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,7 @@ public class GoodsServiceImpl implements GoodsService {
     @Autowired
     private GoodsDataService goodsDataService;
 
-    Logger logger = LoggerFactory.getLogger(GoodsServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(GoodsServiceImpl.class);
 
 
     @Override
@@ -41,40 +42,75 @@ public class GoodsServiceImpl implements GoodsService {
         Long sumGmv = goodsMapper.selectSumGmv(TimestampUtils.getStringDateFromLong(startTime), TimestampUtils.getStringDateFromLong(endTime));
         if (sumGmv != null) { //时间段内没有gmv
             List<Map<String, Object>> topTen = goodsMapper.selectGmvTopTenGoods(TimestampUtils.getStringDateFromLong(startTime), TimestampUtils.getStringDateFromLong(endTime));
-            List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
             Long[] goodsIds = new Long[topTen.size()];
-            Long sumTopTenGmv = 0L;
             int i = 0;
             for (Map<String, Object> map : topTen) {
                 goodsIds[i] = Long.parseLong(map.get("goodsId").toString());
                 i++;
-                sumTopTenGmv = sumTopTenGmv + Long.parseLong(map.get("gmv").toString());
             }
-
             Map<Long, Object> goodsNames = goodsDataService.getGoodsNamesByGoodsIds(goodsIds);
-            for (Map<String, Object> map : topTen) {
-                Map<String, Object> record = Maps.newHashMap();
-                Long goodsId = Long.parseLong(map.get("goodsId").toString());
-                record.put("goodsId", goodsId);
-                record.put("name", goodsNames.get(goodsId));
-                record.put("value", map.get("gmv"));
-                result.add(record);
-            }
-            //如果总的gmv大于前十的gmv才有其他
-            Long otherGmv = sumGmv - sumTopTenGmv;
-            if (otherGmv > 0) {
-                Map<String, Object> other = Maps.newHashMap();
-                other.put("goodsId", 0);
-                other.put("name", "其他");
-                other.put("value", otherGmv);
-                result.add(other);
-            }
-            return result;
+            return getPieChartForMoney(topTen ,sumGmv ,goodsNames , "gmv");
         } else {
             logger.error("该时间段内没有数据");
         }
         return null;
     }
+
+    private List<Map<String , Object>> getPieChartForMoney(List<Map<String , Object>> topTen, Long sumGmv ,
+                                                   Map<Long , Object> goodsNames , String indicator ){
+        List<Map<String, Object>> result = new ArrayList<>();
+        Double sumTopTenGmv = 0d;
+        for (Map<String, Object> map : topTen) {
+            Double gmv = MoneyFormatUtils.getDoubleMoney(Long.parseLong(map.get(indicator).toString()));
+            sumTopTenGmv = sumTopTenGmv + gmv;
+            Map<String, Object> record = Maps.newHashMap();
+            Long goodsId = Long.parseLong(map.get("goodsId").toString());
+            record.put("goodsId", goodsId);
+            record.put("name", goodsNames.get(goodsId));
+            record.put("value", gmv);
+            result.add(record);
+        }
+        double otherGmv = sumGmv/100.0 - sumTopTenGmv;
+        if (otherGmv > 0) {
+            Map<String, Object> other = Maps.newHashMap();
+            other.put("goodsId", 0);
+            other.put("name", "其他");
+            other.put("value", MoneyFormatUtils.getDoubleMoney(otherGmv));
+            result.add(other);
+        }
+
+        return  result;
+    }
+
+
+    private List<Map<String , Object>> getPieChartForNum(List<Map<String , Object>> topTen, Long sumGmv ,
+                                                   Map<Long , Object> goodsNames , String indicator ){
+        List<Map<String, Object>> result = new ArrayList<>();
+        Long sumTopTenGmv = 0L;
+        for (Map<String, Object> map : topTen) {
+            Long gmv = Long.parseLong(map.get(indicator).toString());
+            sumTopTenGmv = sumTopTenGmv + gmv;
+            Map<String, Object> record = Maps.newHashMap();
+            Long goodsId = Long.parseLong(map.get("goodsId").toString());
+            record.put("goodsId", goodsId);
+            record.put("name", goodsNames.get(goodsId));
+            record.put("value", gmv);
+            result.add(record);
+        }
+        Long otherGmv = sumGmv - sumTopTenGmv;
+        if (otherGmv > 0) {
+            Map<String, Object> other = Maps.newHashMap();
+            other.put("goodsId", 0);
+            other.put("name", "其他");
+            other.put("value", otherGmv);
+            result.add(other);
+        }
+
+        return  result;
+    }
+
+
+
 
     @Override
     public List<Map<String, Object>> getGoodsVolumeTopTen(Long startTime, Long endTime) {
@@ -82,7 +118,6 @@ public class GoodsServiceImpl implements GoodsService {
         Long sumVolume = goodsMapper.selectSumVolume(TimestampUtils.getStringDateFromLong(startTime), TimestampUtils.getStringDateFromLong(endTime));
         if (sumVolume != null) { //没有成交额
             List<Map<String, Object>> volumeTopTen = goodsMapper.selectVolumeTopTenGoods(TimestampUtils.getStringDateFromLong(startTime), TimestampUtils.getStringDateFromLong(endTime));
-            List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
             Long[] goodsIds = new Long[volumeTopTen.size()];
             Long sumTopTenVolume = 0L;
             int i = 0;
@@ -92,24 +127,7 @@ public class GoodsServiceImpl implements GoodsService {
                 sumTopTenVolume = sumTopTenVolume + Long.parseLong(map.get("volume").toString());
             }
             Map<Long, Object> goodsNames = goodsDataService.getGoodsNamesByGoodsIds(goodsIds);
-            for (Map<String, Object> map : volumeTopTen) {
-                Map<String, Object> record = Maps.newHashMap();
-                Long goodsId = Long.parseLong(map.get("goodsId").toString());
-                record.put("goodsId", goodsId);
-                record.put("name", goodsNames.get(goodsId));
-                record.put("value", map.get("volume"));
-                result.add(record);
-            }
-            //如果总的成交量大于前十的成交量才有其他
-            Long otherVolume = sumVolume - sumTopTenVolume;
-            if (otherVolume > 0) {
-                Map<String, Object> other = Maps.newHashMap();
-                other.put("goodsId", 0);
-                other.put("name", "其他");
-                other.put("value", otherVolume);
-                result.add(other);
-            }
-            return result;
+            return getPieChartForNum(volumeTopTen ,sumVolume ,goodsNames , "volume");
         } else {
             logger.error("该时间段内没有数据");
         }
@@ -121,7 +139,7 @@ public class GoodsServiceImpl implements GoodsService {
         DynamicDataSourceHolder.setDataSource(DynamicDataSource.OCEAN_DATA);
         List<Map<String, Object>> gmvTopTenCategory = goodsMapper.selectGmvTopTenCategory(TimestampUtils.getStringDateFromLong(startTime), TimestampUtils.getStringDateFromLong(endTime));
         if (gmvTopTenCategory.size() > 0) {
-            List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+            List<Map<String, Object>> result = new ArrayList<>();
             Long sumTopTenCategoryGmv = 0L;
             for (Map<String, Object> map : gmvTopTenCategory) {
                 sumTopTenCategoryGmv = sumTopTenCategoryGmv + Long.parseLong(map.get("gmv").toString());
@@ -131,7 +149,7 @@ public class GoodsServiceImpl implements GoodsService {
                 Integer categoryId = Integer.parseInt(map.get("categoryId").toString());
                 record.put("categoryId", categoryId);
                 record.put("name", CategoryUtils.getCategoryNameById(categoryId));
-                record.put("value", map.get("gmv"));
+                record.put("value", MoneyFormatUtils.getDoubleMoney(Long.parseLong(map.get("gmv").toString())));
                 result.add(record);
             }
             return result;
@@ -149,35 +167,16 @@ public class GoodsServiceImpl implements GoodsService {
         if (sumGmvByCategory != null) {
             List<Map<String, Object>> goodsGmvTopTenByCategory = goodsMapper.selectGmvTopTenGoodsByCategory(category,
                     TimestampUtils.getStringDateFromLong(startTime), TimestampUtils.getStringDateFromLong(endTime));
-            List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
             Long[] goodsIds = new Long[goodsGmvTopTenByCategory.size()];
             Long sumTopTenGmv = 0L;
             int i = 0;
             for (Map<String, Object> map : goodsGmvTopTenByCategory) {
                 goodsIds[i] = Long.parseLong(map.get("goodsId").toString());
                 i++;
-                sumTopTenGmv = sumTopTenGmv + Long.parseLong(map.get("gmv").toString());
             }
 
             Map<Long, Object> goodsNames = goodsDataService.getGoodsNamesByGoodsIds(goodsIds);
-            for (Map<String, Object> map : goodsGmvTopTenByCategory) {
-                Map<String, Object> record = Maps.newHashMap();
-                Long goodsId = Long.parseLong(map.get("goodsId").toString());
-                record.put("goodsId", goodsId);
-                record.put("name", goodsNames.get(goodsId));
-                record.put("value", map.get("gmv"));
-                result.add(record);
-            }
-            //如果总的gmv大于前十的gmv才有其他
-            Long otherGmv = sumGmvByCategory - sumTopTenGmv;
-            if (otherGmv > 0) {
-                Map<String, Object> other = Maps.newHashMap();
-                other.put("goodsId", 0);
-                other.put("name", "其他");
-                other.put("value", otherGmv);
-                result.add(other);
-            }
-            return result;
+            return getPieChartForMoney(goodsGmvTopTenByCategory , sumTopTenGmv , goodsNames , "gmv");
         } else {
             logger.error("该时间段内没有数据");
         }
@@ -189,7 +188,7 @@ public class GoodsServiceImpl implements GoodsService {
         DynamicDataSourceHolder.setDataSource(DynamicDataSource.OCEAN_DATA);
         List<Map<String, Object>> volumeTopTenCategory = goodsMapper.selectVolumeTopTenCategory(TimestampUtils.getStringDateFromLong(startTime), TimestampUtils.getStringDateFromLong(endTime));
         if (volumeTopTenCategory.size() > 0) {
-            List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+            List<Map<String, Object>> result = new ArrayList<>();
             Long sumTopTenCategoryGmv = 0L;
             for (Map<String, Object> map : volumeTopTenCategory) {
                 sumTopTenCategoryGmv = sumTopTenCategoryGmv + Long.parseLong(map.get("volume").toString());
@@ -217,7 +216,6 @@ public class GoodsServiceImpl implements GoodsService {
         if (sumVolumeByCategory != null) {
             List<Map<String, Object>> goodsVolumeTopTenByCategory = goodsMapper.selectVolumeTopTenGoodsByCategory(category,
                     TimestampUtils.getStringDateFromLong(startTime), TimestampUtils.getStringDateFromLong(endTime));
-            List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
             Long[] goodsIds = new Long[goodsVolumeTopTenByCategory.size()];
             Long sumTopTenVolume = 0L;
             int i = 0;
@@ -228,24 +226,7 @@ public class GoodsServiceImpl implements GoodsService {
             }
 
             Map<Long, Object> goodsNames = goodsDataService.getGoodsNamesByGoodsIds(goodsIds);
-            for (Map<String, Object> map : goodsVolumeTopTenByCategory) {
-                Map<String, Object> record = Maps.newHashMap();
-                Long goodsId = Long.parseLong(map.get("goodsId").toString());
-                record.put("goodsId", goodsId);
-                record.put("name", goodsNames.get(goodsId));
-                record.put("value", map.get("volume"));
-                result.add(record);
-            }
-            //如果总的gmv大于前十的gmv才有其他
-            Long otherVolume = sumVolumeByCategory - sumTopTenVolume;
-            if (otherVolume > 0) {
-                Map<String, Object> other = Maps.newHashMap();
-                other.put("goodsId", 0);
-                other.put("name", "其他");
-                other.put("value", otherVolume);
-                result.add(other);
-            }
-            return result;
+            return getPieChartForNum(goodsVolumeTopTenByCategory ,sumVolumeByCategory ,goodsNames , "volume");
         } else {
             logger.error("该时间段内没有数据");
         }
@@ -359,6 +340,8 @@ public class GoodsServiceImpl implements GoodsService {
         result.put("series", series);
         return result;
     }
+
+
 
 
 }
