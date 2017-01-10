@@ -13,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by fanyanlin on 2016/12/29.
@@ -121,7 +119,7 @@ public class OrderServiceImpl implements OrderService,OrderDataService {
      * 查询指定日期复购率
      */
     private int queryRpr(int day) {
-        Map<String,Object> map = new HashMap<String,Object>();
+        Map<String,Object> map = new HashMap<>();
         long endTime = TimestampUtils.getStartTimestamp();
         long startTime = TimestampUtils.getPastDate(endTime,day);
         map.put("endTime",endTime);
@@ -132,8 +130,16 @@ public class OrderServiceImpl implements OrderService,OrderDataService {
         //复购率
         Double rprVal = 0.0;
         if(orderUserList != null && orderUserList.size() > 0) {
-            List<OrderDataPOJO> rePurchaseUserList = orderMapper.selectRePurchaseUser(orderUserList);
-            double rpr = orderUserList.size() / (rePurchaseUserList.size() * 1.0);
+            List<OrderDataPOJO> rePurchaseUserList = orderMapper.selectRePurchaseUser(orderUserList,endTime);
+            Set<Long> set = new HashSet<>();
+            Set<Long> rprSet = new HashSet<>();
+            for (OrderDataPOJO orderData : rePurchaseUserList) {
+                if (set.contains(orderData.getUserId())) {
+                    rprSet.add(orderData.getUserId());
+                }
+                set.add(orderData.getUserId());
+            }
+            double rpr = rprSet.size() / (orderUserList.size() * 1.0);
             rprVal = formatDecimal(rpr)*100;
         }
         return rprVal.intValue();

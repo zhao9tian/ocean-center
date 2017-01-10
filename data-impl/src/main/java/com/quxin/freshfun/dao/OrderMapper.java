@@ -2,6 +2,7 @@ package com.quxin.freshfun.dao;
 
 import com.quxin.freshfun.api.bean.order.OrderDataPOJO;
 import com.quxin.freshfun.api.bean.order.TimeDataPOJO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ public interface OrderMapper {
      * @param list 参数集合
      * @return 复购用户
      */
-    List<OrderDataPOJO> selectRePurchaseUser(List<OrderDataPOJO> list);
+    List<OrderDataPOJO> selectRePurchaseUser(@Param("list") List<OrderDataPOJO> list, @Param("date") Long date);
 
     /**
      * 添加数据纬度
