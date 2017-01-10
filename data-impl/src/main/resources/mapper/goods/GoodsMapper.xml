@@ -55,7 +55,7 @@
 
 
     <select id="selectPvAndUv" resultType="java.util.HashMap">
-        select count(*) as pv , app_id as appId , goods_id as goodsId from ptp where key_event ='e101900' and
+        select count(*) as pv , app_id as appId , goods_id as goodsId from ptp where key_event ='e101900' and goods_id<![CDATA[>]]>0 and
         created <![CDATA[>=]]> #{startTime} and created <![CDATA[<]]> #{endTime} group by app_id , goods_id
     </select>
 
