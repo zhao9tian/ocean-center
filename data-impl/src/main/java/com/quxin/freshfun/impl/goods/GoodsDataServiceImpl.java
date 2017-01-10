@@ -146,6 +146,9 @@ public class GoodsDataServiceImpl implements GoodsDataService {
         if (goodsId != null) {
             DynamicDataSourceHolder.setDataSource(DynamicDataSource.ONLINE_DATA);
             Map<String, Long> goodsInfo = goodsMapper.selectCategoryAndCostByGoodsId(goodsId);
+            if(goodsInfo==null){
+                return 0;
+            }
             return goodsInfo.get("goodsCost").intValue();
         } else {
             logger.error("商品id为空");
