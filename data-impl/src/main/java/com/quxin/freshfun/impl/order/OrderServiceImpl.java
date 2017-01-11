@@ -18,7 +18,7 @@ import java.util.*;
 /**
  * Created by fanyanlin on 2016/12/29.
  */
-@Service("orderService")
+@Service("orderDataService")
 public class OrderServiceImpl implements OrderService,OrderDataService {
     @Autowired
     private OrderMapper orderMapper;
@@ -100,7 +100,7 @@ public class OrderServiceImpl implements OrderService,OrderDataService {
         //设置数据源
         DynamicDataSourceHolder.setDataSource(DynamicDataSource.PTP_DATA);
         Integer totalPV = goodsMapper.selectTotalPV(startTime, endTime);
-        Double GU = formatDecimal((orderData.getOrderPrice()/100.0) / (totalPV / 2.0))*100;
+        Double GU = formatDecimal((orderData.getOrderPrice()/100.0) / (totalPV / 2.0))*10000;
         return GU.intValue();
     }
 
@@ -112,7 +112,7 @@ public class OrderServiceImpl implements OrderService,OrderDataService {
      */
     private double formatDecimal(double param){
         BigDecimal val = new BigDecimal(param);
-        return val.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return val.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
     /**
@@ -140,7 +140,7 @@ public class OrderServiceImpl implements OrderService,OrderDataService {
                 set.add(orderData.getUserId());
             }
             double rpr = rprSet.size() / (orderUserList.size() * 1.0);
-            rprVal = formatDecimal(rpr)*100;
+            rprVal = formatDecimal(rpr)*10000;
         }
         return rprVal.intValue();
     }
