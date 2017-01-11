@@ -5,6 +5,8 @@ import com.quxin.freshfun.api.goods.GoodsService;
 import com.quxin.freshfun.utils.TimestampUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
@@ -22,6 +24,8 @@ public class GoodsTest extends TestBase {
     @Autowired
     private GoodsDataService goodsDataService;
 
+    Logger logger = LoggerFactory.getLogger(GoodsTest.class);
+
     @Before
     public void setUp() throws Exception {
         goodsService = getContext().getBean("goodsService", GoodsService.class);
@@ -38,27 +42,27 @@ public class GoodsTest extends TestBase {
     @org.junit.Test
     public void queryGoodsById() {
 
-        Long now = System.currentTimeMillis();
-        System.out.println(now);
-          System.out.println(goodsDataService.saveGoodsIndicator());//2071531L
-        System.out.println(System.currentTimeMillis() - now);
+//        Long now = System.currentTimeMillis();
+//        System.out.println(now);
+//          System.out.println(goodsDataService.saveGoodsIndicator());//2071531L
+//        System.out.println(System.currentTimeMillis() - now);
     }
 
 
     @org.junit.Test
     public void queryGoods() {
-
-//        System.out.println(goodsService.getGoodsGMVTopTen(1483718400L ,1483804799L));
+//            logger.error("hah");
+        System.out.println(goodsService.getGoodsGMVTopTen(1483718400L ,1483804799L));
 //        System.out.println(goodsService.getGoodsVolumeTopTen(1483718400L ,1483804799L));
 //        System.out.println(goodsService.getCategoryGmvTopTen(1483718400L ,1483804799L));
 //        System.out.println(goodsService.getGoodsGmvTopTenByCategory(108 ,1483718400L ,1483804799L));
 //        System.out.println(goodsService.getCategoryVolumeTopTen(1483718400L ,1483804799L));
 //        System.out.println(goodsService.getGoodsVolumeTopTenByCategory(106 ,1483718400L ,1483804799L));
-        List<Long> ids = new ArrayList<Long>();
-        ids.add(55L);
+//        List<Long> ids = new ArrayList<Long>();
+//        ids.add(55L);
 //        ids.add(52L);
 //        ids.add(2071659L);
-        System.out.println(goodsService.getGoodsIndicator(ids ,1483622000L ,1483891200L ));
+//        System.out.println(goodsService.getGoodsIndicator(ids ,1483622000L ,1483891200L ));
 //        System.out.println(goodsDataService.getPVAndUVByGoodsIdAndAppId(1484891200L ,1484977600L));
     }
 
