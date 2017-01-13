@@ -104,8 +104,13 @@
 
     <!--查询指定时间段内商品某指标前十的信息-->
     <select id="selectTopIndicator" resultType="java.util.HashMap">
-        select  goods_id as goodsId , sum(${field_name}) as ${indicator} from goods_data where `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
-        group by goods_id having sum(${field_name}) > 0 order by sum(${field_name}) desc limit 10
+        select  goods_id as goodsId , avg(${field_name}) as ${indicator} from goods_data where `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
+        group by goods_id having avg(${field_name}) > 0 order by avg(${field_name}) desc limit 10
+    </select>
+
+    <select id="selectTopIndicatorForNum" resultType="java.util.HashMap">
+        select  goods_id as goodsId , sum(${indicator}) as ${indicator} from goods_data where `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
+        group by goods_id having sum(${indicator}) > 0 order by sum(${indicator}) desc limit 10
     </select>
 
     <!--查询指定时间段内的商品volume总和-->

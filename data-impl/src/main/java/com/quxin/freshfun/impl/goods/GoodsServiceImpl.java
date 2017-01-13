@@ -238,8 +238,8 @@ public class GoodsServiceImpl implements GoodsService {
         String endDate = TimestampUtils.getStringDateFromLong(endTime);
         DynamicDataSourceHolder.setDataSource(DynamicDataSource.OCEAN_DATA);
         //时间段内各项指标前十排名
-        List<Map<String, Object>> pvList = goodsMapper.selectTopIndicator(Indicator.PV, Indicator.PV, startDate, endDate);
-        List<Map<String, Object>> uvList = goodsMapper.selectTopIndicator(Indicator.UV, Indicator.UV, startDate, endDate);
+        List<Map<String, Object>> pvList = goodsMapper.selectTopIndicatorForNum(Indicator.PV, startDate, endDate);
+        List<Map<String, Object>> uvList = goodsMapper.selectTopIndicatorForNum(Indicator.UV, startDate, endDate);
         List<Map<String, Object>> avgPriceList = goodsMapper.selectTopIndicator("avg_price", Indicator.AVG_PRICE, startDate, endDate);
         List<Map<String, Object>> grossMarginList = goodsMapper.selectTopIndicator("gross_margin", Indicator.GROSS_MARGIN, startDate, endDate);
         List<Map<String, Object>> convertRateList = goodsMapper.selectTopIndicator("convert_rate", Indicator.CONVERT_RATE, startDate, endDate);
@@ -271,7 +271,7 @@ public class GoodsServiceImpl implements GoodsService {
             result.put(Indicator.SEVEN_RPR, getHistogramData(sevenRprList, goodsNames, Indicator.SEVEN_RPR));
             result.put(Indicator.MONTH_RPR, getHistogramData(monthRprList, goodsNames, Indicator.MONTH_RPR));
             return result;
-        }else{
+        } else {
             return null;
         }
 
@@ -304,7 +304,7 @@ public class GoodsServiceImpl implements GoodsService {
                 Long goodsId = Long.parseLong(map.get("goodsId").toString());
                 goodsIds.add(goodsId);
                 goodsName.add(goodsNames.get(goodsId).toString());
-                goodsIndicatorValue.add(MoneyFormatUtils.getDoubleMoney(Long.parseLong(map.get(indicator).toString())));
+                goodsIndicatorValue.add(MoneyFormatUtils.getDoubleMoney(Double.parseDouble(map.get(indicator).toString()) / 100));
             }
             result.put("values", goodsIndicatorValue);
         }
