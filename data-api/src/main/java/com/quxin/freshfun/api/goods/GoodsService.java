@@ -67,11 +67,21 @@ public interface GoodsService {
 
     /**
      * 查询一段时间内的商品指标
+     * @param goodsIds 商品ids
      * @param startTime 开始时间
      * @param endTime 结束时间
      * @return 商品指标
      */
     Map<String , Object> getGoodsIndicator(List<Long> goodsIds , Long startTime , Long endTime);
+
+
+    /**
+     * 查询一段时间内的商品指标
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 商品指标
+     */
+    Map<String , Object> getIndicatorsForHistogram(Long startTime , Long endTime);
 
     /**
      * 根据商品Id查询商品名称

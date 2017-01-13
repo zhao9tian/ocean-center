@@ -88,6 +88,14 @@ public interface GoodsMapper {
     List<Map<String, Object>> selectGoodsNamesByGoodsIds(@Param("goodsIds") Long[] goodsIds);
 
     /**
+     * 根据商品Ids批量查询商品名称
+     *
+     * @param goodsIds 商品id
+     * @return 列表结果
+     */
+    List<Map<String, Object>> selectGoodsNamesByGoodsIds(@Param("goodsIds") List<Long> goodsIds);
+
+    /**
      * 插入商品数据指标
      *
      * @param goodsData 商品指标
@@ -220,4 +228,13 @@ public interface GoodsMapper {
     List<Map<String, Object>> selectPvAndUv(@Param("startTime") Long start, @Param("endTime") Long end);
 
 
+    /**
+     * 查询某一时间段内,商品某指标前十的数据
+     * @param indicator 要查询的指标
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 返回列表内容
+     */
+    List<Map<String,Object>> selectTopIndicator(@Param("field_name") String field,
+                                                @Param("indicator") String indicator, @Param("startTime") String startTime, @Param("endTime") String endTime);
 }

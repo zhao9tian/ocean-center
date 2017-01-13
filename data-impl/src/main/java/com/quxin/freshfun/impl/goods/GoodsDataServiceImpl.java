@@ -177,4 +177,20 @@ public class GoodsDataServiceImpl implements GoodsDataService {
         }
         return null;
     }
+
+    @Override
+    public Map<Long, Object> getGoodsNamesByGoodsIds(List<Long> goodsIds) {
+        DynamicDataSourceHolder.setDataSource(DynamicDataSource.ONLINE_DATA);
+        if (goodsIds != null && goodsIds.size() > 0) {
+            List<Map<String, Object>> goods = goodsMapper.selectGoodsNamesByGoodsIds(goodsIds);
+            Map<Long, Object> result = Maps.newHashMap();
+            for (Map map : goods) {
+                result.put(Long.parseLong(map.get("goodsId").toString()), map.get("name"));
+            }
+            return result;
+        } else {
+            logger.error("商品ids为空");
+        }
+        return null;
+    }
 }

@@ -102,6 +102,12 @@
         group by goods_id having sum(gmv) > 0 order by sum(gmv) desc limit 10
 	</select>
 
+    <!--查询指定时间段内商品某指标前十的信息-->
+    <select id="selectTopIndicator" resultType="java.util.HashMap">
+        select  goods_id as goodsId , sum(${field_name}) as ${indicator} from goods_data where `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
+        group by goods_id having sum(${field_name}) > 0 order by sum(${field_name}) desc limit 10
+    </select>
+
     <!--查询指定时间段内的商品volume总和-->
     <select id="selectSumVolume" resultType="java.lang.Long">
 		select sum(volume) from goods_data where `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
@@ -118,7 +124,6 @@
         select sum(gmv) as gmv, category as categoryId from goods_data where `date` <![CDATA[>=]]> #{startTime} and `date` <![CDATA[<=]]> #{endTime}
           group by category  order by sum(gmv) desc
 	</select>
-
 
     <!--查询指定时间段内某个品类下的商品gmv总和-->
     <select id="selectSumGmvByCategory" resultType="java.lang.Long">

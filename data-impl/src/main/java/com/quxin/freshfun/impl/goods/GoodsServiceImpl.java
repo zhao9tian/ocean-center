@@ -3,6 +3,7 @@ package com.quxin.freshfun.impl.goods;
 import com.google.common.collect.Maps;
 import com.quxin.freshfun.api.goods.GoodsDataService;
 import com.quxin.freshfun.api.goods.GoodsService;
+import com.quxin.freshfun.boot.Indicator;
 import com.quxin.freshfun.dao.GoodsMapper;
 import com.quxin.freshfun.db.DynamicDataSource;
 import com.quxin.freshfun.db.DynamicDataSourceHolder;
@@ -49,7 +50,7 @@ public class GoodsServiceImpl implements GoodsService {
                 i++;
             }
             Map<Long, Object> goodsNames = goodsDataService.getGoodsNamesByGoodsIds(goodsIds);
-            return getPieChartForMoney(topTen, sumGmv, goodsNames, "gmv");
+            return getPieChartForMoney(topTen, sumGmv, goodsNames, Indicator.GMV);
         } else {
             logger.error("该时间段内没有数据");
         }
@@ -69,10 +70,10 @@ public class GoodsServiceImpl implements GoodsService {
             for (Map<String, Object> map : volumeTopTen) {
                 goodsIds[i] = Long.parseLong(map.get("goodsId").toString());
                 i++;
-                sumTopTenVolume = sumTopTenVolume + Long.parseLong(map.get("volume").toString());
+                sumTopTenVolume = sumTopTenVolume + Long.parseLong(map.get(Indicator.VOLUME).toString());
             }
             Map<Long, Object> goodsNames = goodsDataService.getGoodsNamesByGoodsIds(goodsIds);
-            return getPieChartForNum(volumeTopTen, sumVolume, goodsNames, "volume");
+            return getPieChartForNum(volumeTopTen, sumVolume, goodsNames, Indicator.VOLUME);
         } else {
             logger.error("该时间段内没有数据");
         }
@@ -87,14 +88,14 @@ public class GoodsServiceImpl implements GoodsService {
             List<Map<String, Object>> result = new ArrayList<>();
             Long sumTopTenCategoryGmv = 0L;
             for (Map<String, Object> map : gmvTopTenCategory) {
-                sumTopTenCategoryGmv = sumTopTenCategoryGmv + Long.parseLong(map.get("gmv").toString());
+                sumTopTenCategoryGmv = sumTopTenCategoryGmv + Long.parseLong(map.get(Indicator.GMV).toString());
             }
             for (Map<String, Object> map : gmvTopTenCategory) {
                 Map<String, Object> record = Maps.newHashMap();
                 Integer categoryId = Integer.parseInt(map.get("categoryId").toString());
                 record.put("categoryId", categoryId);
                 record.put("name", CategoryUtils.getCategoryNameById(categoryId));
-                record.put("value", MoneyFormatUtils.getDoubleMoney(Long.parseLong(map.get("gmv").toString())));
+                record.put("value", MoneyFormatUtils.getDoubleMoney(Long.parseLong(map.get(Indicator.GMV).toString())));
                 result.add(record);
             }
             return result;
@@ -121,7 +122,7 @@ public class GoodsServiceImpl implements GoodsService {
             }
 
             Map<Long, Object> goodsNames = goodsDataService.getGoodsNamesByGoodsIds(goodsIds);
-            return getPieChartForMoney(goodsGmvTopTenByCategory, sumTopTenGmv, goodsNames, "gmv");
+            return getPieChartForMoney(goodsGmvTopTenByCategory, sumTopTenGmv, goodsNames, Indicator.GMV);
         } else {
             logger.error("该时间段内没有数据");
         }
@@ -136,14 +137,14 @@ public class GoodsServiceImpl implements GoodsService {
             List<Map<String, Object>> result = new ArrayList<>();
             Long sumTopTenCategoryGmv = 0L;
             for (Map<String, Object> map : volumeTopTenCategory) {
-                sumTopTenCategoryGmv = sumTopTenCategoryGmv + Long.parseLong(map.get("volume").toString());
+                sumTopTenCategoryGmv = sumTopTenCategoryGmv + Long.parseLong(map.get(Indicator.VOLUME).toString());
             }
             for (Map<String, Object> map : volumeTopTenCategory) {
                 Map<String, Object> record = Maps.newHashMap();
                 Integer categoryId = Integer.parseInt(map.get("categoryId").toString());
                 record.put("categoryId", categoryId);
                 record.put("name", CategoryUtils.getCategoryNameById(categoryId));
-                record.put("value", map.get("volume"));
+                record.put("value", map.get(Indicator.VOLUME));
                 result.add(record);
             }
             return result;
@@ -167,11 +168,11 @@ public class GoodsServiceImpl implements GoodsService {
             for (Map<String, Object> map : goodsVolumeTopTenByCategory) {
                 goodsIds[i] = Long.parseLong(map.get("goodsId").toString());
                 i++;
-                sumTopTenVolume = sumTopTenVolume + Long.parseLong(map.get("volume").toString());
+                sumTopTenVolume = sumTopTenVolume + Long.parseLong(map.get(Indicator.VOLUME).toString());
             }
 
             Map<Long, Object> goodsNames = goodsDataService.getGoodsNamesByGoodsIds(goodsIds);
-            return getPieChartForNum(goodsVolumeTopTenByCategory, sumVolumeByCategory, goodsNames, "volume");
+            return getPieChartForNum(goodsVolumeTopTenByCategory, sumVolumeByCategory, goodsNames, Indicator.VOLUME);
         } else {
             logger.error("该时间段内没有数据");
         }
@@ -181,6 +182,24 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public Map<String, Object> getGoodsIndicator(List<Long> goodsIds, Long startTime, Long endTime) {
         if (goodsIds != null && goodsIds.size() > 0) {
+            //先校验商品id
+            Long[] goodsIdsArr = new Long[goodsIds.size()];
+            int i = 0;
+            for (Long goodsId : goodsIds) {
+                goodsIdsArr[i] = goodsId;
+                i++;
+            }
+            Map<Long, Object> goodsNames = goodsDataService.getGoodsNamesByGoodsIds(goodsIdsArr);
+            for (Long goodsId : goodsIds) {
+                if (goodsNames.get(goodsId) == null) {
+                    Map<String, Object> map = Maps.newHashMap();
+                    map.put("code", 1004);
+                    map.put("msg", "id为" + goodsId + "的商品不存在");
+                    Map<String, Object> resultMap = Maps.newHashMap();
+                    resultMap.put("status", map);
+                    return resultMap;
+                }
+            }
             //获取x轴
             String[] dates = TimestampUtils.getDates(startTime, endTime);
             DynamicDataSourceHolder.setDataSource(DynamicDataSource.OCEAN_DATA);
@@ -195,33 +214,16 @@ public class GoodsServiceImpl implements GoodsService {
                 data.put("data", dates);
                 xAxisValue.add(data);
                 result.put("xAxis", xAxisValue);
-                Long[] goodsIdsArr = new Long[goodsIds.size()];
-                int i = 0;
-                for (Long goodsId : goodsIds) {
-                    goodsIdsArr[i] = goodsId;
-                    i++;
-                }
-                Map<Long, Object> goodsNames = goodsDataService.getGoodsNamesByGoodsIds(goodsIdsArr);
-                for(Long goodsId : goodsIds){
-                    if(goodsNames.get(goodsId) == null){
-                        Map<String, Object>  map = Maps.newHashMap();
-                        map.put("code",1004);
-                        map.put("msg","id为"+goodsId+"的商品不存在");
-                        Map<String, Object>  resultMap = Maps.newHashMap();
-                        resultMap.put("status",map);
-                        return resultMap;
-                    }
-                }
-
-                result.put("pv", getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, "pv"));
-                result.put("uv", getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, "uv"));
-                result.put("avgPrice", getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, "avgPrice"));
-                result.put("grossMargin", getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, "grossMargin"));
-                result.put("convertRate", getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, "convertRate"));
-                result.put("gmv", getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, "gmv"));
-                result.put("gmvUv", getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, "gmvUv"));
-                result.put("sevenRpr", getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, "sevenRpr"));
-                result.put("monthRpr", getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, "monthRpr"));
+                result.put(Indicator.PV, getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, Indicator.PV));
+                result.put(Indicator.UV, getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, Indicator.UV));
+                result.put(Indicator.VOLUME, getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, Indicator.VOLUME));
+                result.put(Indicator.AVG_PRICE, getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, Indicator.AVG_PRICE));
+                result.put(Indicator.GROSS_MARGIN, getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, Indicator.GROSS_MARGIN));
+                result.put(Indicator.CONVERT_RATE, getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, Indicator.CONVERT_RATE));
+                result.put(Indicator.GMV, getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, Indicator.GMV));
+                result.put(Indicator.GMV_UV, getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, Indicator.GMV_UV));
+                result.put(Indicator.SEVEN_RPR, getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, Indicator.SEVEN_RPR));
+                result.put(Indicator.MONTH_RPR, getSingleIndicatorByGoodsIds(allGoodsIndicator, goodsIds, dates, Indicator.MONTH_RPR));
                 return result;
             } else {
                 logger.error(TimestampUtils.getStringDateFromLong(startTime) + "到" + TimestampUtils.getStringDateFromLong(endTime) + "期间没有数据");
@@ -229,6 +231,89 @@ public class GoodsServiceImpl implements GoodsService {
         }
         return null;
     }
+
+    @Override
+    public Map<String, Object> getIndicatorsForHistogram(Long startTime, Long endTime) {
+        String startDate = TimestampUtils.getStringDateFromLong(startTime);
+        String endDate = TimestampUtils.getStringDateFromLong(endTime);
+        DynamicDataSourceHolder.setDataSource(DynamicDataSource.OCEAN_DATA);
+        //时间段内各项指标前十排名
+        List<Map<String, Object>> pvList = goodsMapper.selectTopIndicator(Indicator.PV, Indicator.PV, startDate, endDate);
+        List<Map<String, Object>> uvList = goodsMapper.selectTopIndicator(Indicator.UV, Indicator.UV, startDate, endDate);
+        List<Map<String, Object>> avgPriceList = goodsMapper.selectTopIndicator("avg_price", Indicator.AVG_PRICE, startDate, endDate);
+        List<Map<String, Object>> grossMarginList = goodsMapper.selectTopIndicator("gross_margin", Indicator.GROSS_MARGIN, startDate, endDate);
+        List<Map<String, Object>> convertRateList = goodsMapper.selectTopIndicator("convert_rate", Indicator.CONVERT_RATE, startDate, endDate);
+        List<Map<String, Object>> gmvUvList = goodsMapper.selectTopIndicator("gmv_uv", Indicator.GMV_UV, startDate, endDate);
+        List<Map<String, Object>> sevenRprList = goodsMapper.selectTopIndicator("seven_rpr", Indicator.SEVEN_RPR, startDate, endDate);
+        List<Map<String, Object>> monthRprList = goodsMapper.selectTopIndicator("month_rpr", Indicator.MONTH_RPR, startDate, endDate);
+        List<Map<String, Object>> all = new ArrayList<>();
+        all.addAll(pvList);
+        all.addAll(uvList);
+        all.addAll(avgPriceList);
+        all.addAll(grossMarginList);
+        all.addAll(convertRateList);
+        all.addAll(gmvUvList);
+        all.addAll(sevenRprList);
+        all.addAll(monthRprList);
+        List<Long> goodsIds = new ArrayList<>();
+        if (all.size() > 0) {
+            for (Map<String, Object> map : all) {
+                goodsIds.add(Long.parseLong(map.get("goodsId").toString()));
+            }
+            Map<Long, Object> goodsNames = goodsDataService.getGoodsNamesByGoodsIds(goodsIds);
+            Map<String, Object> result = Maps.newHashMap();
+            result.put(Indicator.PV, getHistogramData(pvList, goodsNames, Indicator.PV));
+            result.put(Indicator.UV, getHistogramData(uvList, goodsNames, Indicator.UV));
+            result.put(Indicator.AVG_PRICE, getHistogramData(avgPriceList, goodsNames, Indicator.AVG_PRICE));
+            result.put(Indicator.GROSS_MARGIN, getHistogramData(grossMarginList, goodsNames, Indicator.GROSS_MARGIN));
+            result.put(Indicator.CONVERT_RATE, getHistogramData(convertRateList, goodsNames, Indicator.CONVERT_RATE));
+            result.put(Indicator.GMV_UV, getHistogramData(gmvUvList, goodsNames, Indicator.GMV_UV));
+            result.put(Indicator.SEVEN_RPR, getHistogramData(sevenRprList, goodsNames, Indicator.SEVEN_RPR));
+            result.put(Indicator.MONTH_RPR, getHistogramData(monthRprList, goodsNames, Indicator.MONTH_RPR));
+            return result;
+        }else{
+            return null;
+        }
+
+    }
+
+    /**
+     * 封装top10的数据
+     *
+     * @param dataList   数据列表
+     * @param goodsNames 商品名称
+     * @param indicator  指标
+     * @return 柱状图数据
+     */
+    private Map<String, Object> getHistogramData(List<Map<String, Object>> dataList, Map<Long, Object> goodsNames, String indicator) {
+        List<Long> goodsIds = new ArrayList<>();
+        List<String> goodsName = new ArrayList<>();
+        Map<String, Object> result = Maps.newHashMap();
+        if (Indicator.PV.equals(indicator) || Indicator.UV.equals(indicator)) {
+            List<Integer> goodsIndicatorValue = new ArrayList<>();
+            for (Map<String, Object> map : dataList) {
+                Long goodsId = Long.parseLong(map.get("goodsId").toString());
+                goodsIds.add(goodsId);
+                goodsName.add(goodsNames.get(goodsId).toString());
+                goodsIndicatorValue.add(Integer.parseInt(map.get(indicator).toString()));
+            }
+            result.put("values", goodsIndicatorValue);
+        } else {
+            List<Double> goodsIndicatorValue = new ArrayList<>();
+            for (Map<String, Object> map : dataList) {
+                Long goodsId = Long.parseLong(map.get("goodsId").toString());
+                goodsIds.add(goodsId);
+                goodsName.add(goodsNames.get(goodsId).toString());
+                goodsIndicatorValue.add(MoneyFormatUtils.getDoubleMoney(Long.parseLong(map.get(indicator).toString())));
+            }
+            result.put("values", goodsIndicatorValue);
+        }
+
+        result.put("goodsIds", goodsIds);
+        result.put("goodsName", goodsName);
+        return result;
+    }
+
 
     @Override
     public Map<Long, Object> getGoodsNamesByGoodsIds(Long[] goodsIds) {
@@ -266,7 +351,7 @@ public class GoodsServiceImpl implements GoodsService {
             Map<Long, Object> goodsNames = goodsDataService.getGoodsNamesByGoodsIds(goodsIdsArr);
             goodsInfo.put("name", goodsNames.get(goodsId));
             //不同指标获取的格式不一样
-            if ("pv".equals(indicator) || "uv".equals(indicator)) {
+            if (Indicator.PV.equals(indicator) || Indicator.UV.equals(indicator) || Indicator.VOLUME.equals(indicator)) {
                 List<Integer> indicatorArr = new ArrayList<>();
                 for (String date : dates) {//时间段
                     Boolean flag = false;
