@@ -4,14 +4,14 @@
 
 
     <groupId>freshfun</groupId>
-    <artifactId>data-center</artifactId>
+    <artifactId>ocean-pro</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
     <modules>
-        <module>data-api</module>
-        <module>data-impl</module>
+        <module>ocean-api</module>
+        <module>ocean-impl</module>
     </modules>
 
     <properties>

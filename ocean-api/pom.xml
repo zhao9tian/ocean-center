@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>freshfun</groupId>
-        <artifactId>data-center</artifactId>
+        <artifactId>ocean-pro</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <groupId>freshfun</groupId>
-    <artifactId>data-api</artifactId>
+    <artifactId>ocean-api</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>data-api</name>
+    <name>ocean-api</name>
     <modelVersion>4.0.0</modelVersion>
 
 

@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>freshfun</groupId>
-        <artifactId>data-center</artifactId>
+        <artifactId>ocean-pro</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>data-impl</artifactId>
+    <artifactId>ocean-impl</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>data-impl</name>
+    <name>ocean-impl</name>
     <packaging>war</packaging>
 
     <properties>
@@ -23,7 +23,7 @@
 
         <dependency>
             <groupId>freshfun</groupId>
-            <artifactId>data-api</artifactId>
+            <artifactId>ocean-api</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
