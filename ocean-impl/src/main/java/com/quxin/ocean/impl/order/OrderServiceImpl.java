@@ -2,7 +2,7 @@ package com.quxin.ocean.impl.order;
 
 import com.quxin.ocean.api.bean.order.OrderDataPOJO;
 import com.quxin.ocean.api.bean.order.TimeDataPOJO;
-import com.quxin.ocean.api.order.OrderDataService;
+import com.quxin.ocean.service.OrderDataService;
 import com.quxin.ocean.api.order.OrderService;
 import com.quxin.ocean.dao.GoodsMapper;
 import com.quxin.ocean.dao.OrderMapper;

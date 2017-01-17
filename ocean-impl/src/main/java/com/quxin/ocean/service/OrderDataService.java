@@ -1,4 +1,4 @@
-package com.quxin.ocean.api.order;
+package com.quxin.ocean.service;
 
 /**
  * Created by fanyanlin on 2017/1/9.

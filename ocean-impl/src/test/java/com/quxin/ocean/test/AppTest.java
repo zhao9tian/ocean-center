@@ -1,7 +1,7 @@
 package com.quxin.ocean.test;
 
-import com.quxin.ocean.api.app.AppDataService;
-import com.quxin.ocean.api.app.AppTaskService;
+import com.quxin.ocean.service.AppDataService;
+import com.quxin.ocean.api.app.AppService;
 import com.quxin.ocean.api.goods.GoodsService;
 import com.quxin.ocean.utils.ReckonRateUtil;
 import org.junit.After;
@@ -20,14 +20,11 @@ public class AppTest extends TestBase {
     @Resource
     private AppDataService appDataService;
     @Resource
-    private AppTaskService appTaskService;
-    @Resource
     private GoodsService goodsService;
 
     @Before
     public void setUp() throws Exception {
         appDataService = getContext().getBean("appDataService",AppDataService.class);
-        appTaskService = getContext().getBean("appTaskService",AppTaskService.class);
         goodsService = getContext().getBean("goodsService",GoodsService.class);
     }
 
@@ -40,7 +37,7 @@ public class AppTest extends TestBase {
     @Test
     public void test(){
         for(int i=1;i<46;i++){
-            appTaskService.runAppTask(i);
+            appDataService.runAppTask(i);
         }
     }
 

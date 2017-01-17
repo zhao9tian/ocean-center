@@ -1,9 +1,9 @@
-package com.quxin.ocean.api.app;
+package com.quxin.ocean.service;
 
 /**
  * Created by ziming on 2017/1/9.
  */
-public interface AppTaskService {
+public interface AppDataService {
     /**
      * 定时任务
      */

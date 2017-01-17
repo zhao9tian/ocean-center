@@ -1,8 +1,8 @@
 package com.quxin.ocean.task;
 
-import com.quxin.ocean.api.app.AppTaskService;
-import com.quxin.ocean.api.goods.GoodsDataService;
-import com.quxin.ocean.api.order.OrderDataService;
+import com.quxin.ocean.service.AppDataService;
+import com.quxin.ocean.service.GoodsDataService;
+import com.quxin.ocean.service.OrderDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class Timer {
     @Autowired
     private GoodsDataService goodsDataService;
     @Autowired
-    private AppTaskService appTaskService;
+    private AppDataService appDataService;
     @Autowired
     private OrderDataService orderDataService;
 
@@ -33,7 +33,7 @@ public class Timer {
     @Scheduled(cron="0 0 3 * * ? ")
     public void autoImportAppLatitudeData() {
         System.out.println(new Date()+"开始统计公众号&商品数据");
-        appTaskService.runAppTask(1);
+        appDataService.runAppTask(1);
     }
 
     @Scheduled(cron="0 0 3 * * ? ")

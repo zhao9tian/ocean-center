@@ -1,6 +1,6 @@
 package com.quxin.ocean.test;
 
-import com.quxin.ocean.api.goods.GoodsDataService;
+import com.quxin.ocean.service.GoodsDataService;
 import com.quxin.ocean.api.goods.GoodsService;
 import com.quxin.ocean.utils.TimestampUtils;
 import org.junit.After;

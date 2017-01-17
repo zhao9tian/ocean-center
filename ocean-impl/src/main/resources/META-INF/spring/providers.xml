@@ -9,7 +9,7 @@
     <dubbo:service interface="com.quxin.ocean.api.goods.GoodsService" ref="goodsService" protocol="dubbo"/>
 
     <!--appData服务-->
-    <dubbo:service interface="com.quxin.ocean.api.app.AppDataService" ref="appDataService" protocol="dubbo"/>
+    <dubbo:service interface="com.quxin.ocean.api.app.AppService" ref="appService" protocol="dubbo"/>
 
     <!--订单-->
     <dubbo:service interface="com.quxin.ocean.api.order.OrderService" ref="orderService" protocol="dubbo"/>

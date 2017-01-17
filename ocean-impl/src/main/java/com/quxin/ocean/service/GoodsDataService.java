@@ -1,4 +1,4 @@
-package com.quxin.ocean.api.goods;
+package com.quxin.ocean.service;
 
 import java.util.List;
 import java.util.Map;

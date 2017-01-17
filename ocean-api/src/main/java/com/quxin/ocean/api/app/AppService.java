@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Created by ziming on 2017/1/5.
  */
-public interface AppDataService {
+public interface AppService {
 
     /**
      * 根据appId获取appName

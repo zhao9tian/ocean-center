@@ -1,7 +1,7 @@
 package com.quxin.ocean.impl.goods;
 
 import com.google.common.collect.Maps;
-import com.quxin.ocean.api.goods.GoodsDataService;
+import com.quxin.ocean.service.GoodsDataService;
 import com.quxin.ocean.dao.GoodsMapper;
 import com.quxin.ocean.db.DynamicDataSource;
 import com.quxin.ocean.db.DynamicDataSourceHolder;
