@@ -48,7 +48,7 @@
         <appender-ref ref="DATASOURCE_FILE" />
     </logger>
 
-    <logger name="com.quxin.freshfun" level="WARN">
+    <logger name="com.quxin.ocean" level="WARN">
         <appender-ref ref="FILE" />
     </logger>
 

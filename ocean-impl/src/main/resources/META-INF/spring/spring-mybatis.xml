@@ -45,7 +45,7 @@
         <property name="maxWait" value="30000"/>
     </bean>
     <!-- spring配置文件配置多数据源关系 -->
-    <bean id="dataSource" class="com.quxin.freshfun.db.DynamicDataSource">
+    <bean id="dataSource" class="com.quxin.ocean.db.DynamicDataSource">
         <property name="targetDataSources">
             <map key-type="java.lang.String">
                 <entry key="ocean" value-ref="ocean"></entry>
@@ -66,7 +66,7 @@
     </bean>
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.quxin.freshfun.dao"/>
+        <property name="basePackage" value="com.quxin.ocean.dao"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
 

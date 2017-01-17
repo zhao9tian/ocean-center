@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.quxin.freshfun.dao.GoodsMapper">
+<mapper namespace="com.quxin.ocean.dao.GoodsMapper">
 
     <!-- 根据商品id查询pv -->
     <select id="selectGoodsPVByGoodsId" resultType="java.lang.Integer">
@@ -15,7 +15,7 @@
 	</select>
 
     <select id="selectGoodsNameById" parameterType="java.util.Arrays"
-            resultType="com.quxin.freshfun.api.bean.GoodsPOJO">
+            resultType="com.quxin.ocean.api.bean.GoodsPOJO">
         select id as goodsId,title as title from goods_base where id in
         <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
             #{item}

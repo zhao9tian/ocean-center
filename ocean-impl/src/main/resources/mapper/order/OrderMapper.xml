@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.quxin.freshfun.dao.OrderMapper">
+<mapper namespace="com.quxin.ocean.dao.OrderMapper">
 
-	<resultMap id="ResultDataMap" type="com.quxin.freshfun.api.bean.order.OrderDataPOJO">
+	<resultMap id="ResultDataMap" type="com.quxin.ocean.api.bean.order.OrderDataPOJO">
 		<result column="orderNum" jdbcType="INTEGER" property="orderNum"/>
 		<result column="orderPrice" jdbcType="BIGINT" property="orderPrice"/>
 		<result column="orderDate" jdbcType="VARCHAR" property="orderDate"/>
 		<result column="user_id" jdbcType="BIGINT" property="userId"/>
 	</resultMap>
 
-	<resultMap id="ResultOrderMap" type="com.quxin.freshfun.api.bean.order.TimeDataPOJO">
+	<resultMap id="ResultOrderMap" type="com.quxin.ocean.api.bean.order.TimeDataPOJO">
 		<id column="id" jdbcType="BIGINT" property="id"/>
 		<result column="gmv" jdbcType="BIGINT" property="gmv"/>
 		<result column="gmv_uv" jdbcType="INTEGER" property="gmvUv"/>
@@ -56,7 +56,7 @@
 		group by user_id,orderDate
 	</select>
     <!--添加次日的统计数据-->
-    <insert id="insertTimeLatitude" parameterType="com.quxin.freshfun.api.bean.order.TimeDataPOJO" >
+    <insert id="insertTimeLatitude" parameterType="com.quxin.ocean.api.bean.order.TimeDataPOJO" >
         insert into time_data (id,gmv,gmv_uv,order_num,seven_rpr,thirty_rpr,created)
         values (#{id},#{gmv},#{gmvUv},#{orderNum},#{sevenRpr},#{thirtyRpr},#{created})
     </insert>

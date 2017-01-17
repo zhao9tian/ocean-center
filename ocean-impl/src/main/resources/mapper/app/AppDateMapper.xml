@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.quxin.freshfun.dao.AppDataMapper">
+<mapper namespace="com.quxin.ocean.dao.AppDataMapper">
 	<!--定时任务使用，查询订单数据-->
 	<select id="selectOrderInfo" resultType="java.util.Map">
 		SELECT app_id AS appId ,goods_id AS goodsId,SUM(actual_price) AS gmv,
@@ -25,7 +25,7 @@
 		</foreach>
 	</insert>
     <!--获取公众号下商品成交额数据-->
-	<select id="selectAppGoodsVot" resultType="com.quxin.freshfun.api.bean.app.AppOutParam">
+	<select id="selectAppGoodsVot" resultType="com.quxin.ocean.api.bean.app.AppOutParam">
 		select app_id as appId ,goods_id as goodsId,sum(gmv) as gmv from app_data where app_id=#{appId} and date <![CDATA[>=]]> #{startDate}
 		and date <![CDATA[<=]]> #{endDate} group by goodsId order by gmv DESC limit 10
 	</select>
@@ -35,7 +35,7 @@
 		and date <![CDATA[<=]]> #{endDate}
 	</select>
     <!--获取公众号下商品成交量数据-->
-	<select id="selectAppGoodsTv" resultType="com.quxin.freshfun.api.bean.app.AppOutParam">
+	<select id="selectAppGoodsTv" resultType="com.quxin.ocean.api.bean.app.AppOutParam">
 		select app_id as appId ,goods_id as goodsId,sum(volume) as volume from app_data where app_id=#{appId} and date <![CDATA[>=]]> #{startDate}
 		and date <![CDATA[<=]]> #{endDate} group by goodsId order by volume DESC limit 10
 	</select>
@@ -46,7 +46,7 @@
 	</select>
 
     <!--获取商品下公众号成交额数据-->
-    <select id="selectGoodsAppVot" resultType="com.quxin.freshfun.api.bean.app.AppOutParam">
+    <select id="selectGoodsAppVot" resultType="com.quxin.ocean.api.bean.app.AppOutParam">
         select app_id as appId ,goods_id as goodsId,sum(gmv) as gmv from app_data where goods_id=#{goodsId} and date <![CDATA[>=]]> #{startDate}
         and date <![CDATA[<=]]> #{endDate} group by appId order by gmv DESC limit 10
     </select>
@@ -56,7 +56,7 @@
         and date <![CDATA[<=]]> #{endDate}
     </select>
     <!--获取商品下公众号成交量数据-->
-    <select id="selectGoodsAppTv" resultType="com.quxin.freshfun.api.bean.app.AppOutParam">
+    <select id="selectGoodsAppTv" resultType="com.quxin.ocean.api.bean.app.AppOutParam">
         select app_id as appId ,goods_id as goodsId,sum(volume) as volume from app_data where goods_id=#{goodsId} and date <![CDATA[>=]]> #{startDate}
         and date <![CDATA[<=]]> #{endDate} group by appId order by volume DESC limit 10
     </select>
@@ -66,7 +66,7 @@
         and date <![CDATA[<=]]> #{endDate}
     </select>
     <!--获取公众号成交额数据-->
-    <select id="selectAppVot" resultType="com.quxin.freshfun.api.bean.app.AppOutParam">
+    <select id="selectAppVot" resultType="com.quxin.ocean.api.bean.app.AppOutParam">
         select app_id as appId ,sum(gmv) as gmv from app_data where date <![CDATA[>=]]> #{startDate}
 		and date <![CDATA[<=]]> #{endDate} group by appId order by gmv DESC limit 10
     </select>
@@ -76,7 +76,7 @@
 		and date <![CDATA[<=]]> #{endDate}
     </select>
     <!--获取公众号成交量数据-->
-    <select id="selectAppTv" resultType="com.quxin.freshfun.api.bean.app.AppOutParam">
+    <select id="selectAppTv" resultType="com.quxin.ocean.api.bean.app.AppOutParam">
         select app_id as appId ,sum(volume) as volume from app_data where date <![CDATA[>=]]> #{startDate}
 		and date <![CDATA[<=]]> #{endDate} group by appId order by volume DESC limit 10
     </select>
@@ -86,7 +86,7 @@
 		and date <![CDATA[<=]]> #{endDate}
     </select>
 
-    <select id="selectAppGoodsInfo" resultType="com.quxin.freshfun.api.bean.app.AppOutParam">
+    <select id="selectAppGoodsInfo" resultType="com.quxin.ocean.api.bean.app.AppOutParam">
         select app_id as appId ,goods_id as goodsId ,pv,uv,gmv,volume,gmv_uv as gmvUv ,gross_margin as grossMargin,convert_rate as convertRate,avg_price as avgPrice,date as date from app_data
         where app_id=#{appId} and goods_id in
         <foreach collection="goodsIds" item="item" index="index" open="(" separator="," close=")">
