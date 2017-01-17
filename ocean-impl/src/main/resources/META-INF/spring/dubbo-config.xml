@@ -14,8 +14,6 @@
     <!--使用dubbo协议 kryo序列化模式-->
     <dubbo:protocol  name="dubbo" serialization="kryo" port="20881"/>
 
-    <!--delay设置为-1，默认dubbo配置在spring容易加载完之后载入-->
-    <dubbo:provider delay="-1" timeout="6000" retries="0"/>
 
 
 </beans>

@@ -1,7 +1,7 @@
 package com.quxin.ocean.test;
 
-import com.quxin.ocean.service.GoodsDataService;
 import com.quxin.ocean.api.goods.GoodsService;
+import com.quxin.ocean.service.GoodsDataService;
 import com.quxin.ocean.utils.TimestampUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -44,7 +44,7 @@ public class GoodsTest extends TestBase {
 
 //        Long now = System.currentTimeMillis();
 //        System.out.println(now);
-//          System.out.println(goodsDataService.saveGoodsIndicator());//2071531L
+          System.out.println(goodsDataService.saveGoodsIndicator());//2071531L
 //        System.out.println(System.currentTimeMillis() - now);
     }
 
