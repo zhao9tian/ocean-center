@@ -8,12 +8,13 @@
     <!--dubbo 基础配置-->
     <dubbo:application name="ocean-center" owner="qucheng" organization="freshfun"/>
 
-    <!--<dubbo:registry address="zookeeper://120.26.8.237:2181" />-->
-    <!--线上环境-->
+    <!--多环境适配-->
     <dubbo:registry protocol="zookeeper" address="${zookeeper.address}"/>
 
+    <!--使用dubbo协议 kryo序列化模式-->
     <dubbo:protocol  name="dubbo" serialization="kryo" port="20881"/>
 
+    <!--delay设置为-1，默认dubbo配置在spring容易加载完之后载入-->
     <dubbo:provider delay="-1" timeout="6000" retries="0"/>
 
 
